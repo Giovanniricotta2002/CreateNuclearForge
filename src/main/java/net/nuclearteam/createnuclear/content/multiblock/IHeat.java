@@ -2,6 +2,7 @@ package net.nuclearteam.createnuclear.content.multiblock;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
@@ -67,7 +68,7 @@ public interface IHeat extends IWrenchable {
 
         public static LangBuilder getFormattedHeatText(int heat) {
             HeatLevel heatLevel = of(heat);
-            LangBuilder builder = CreateNuclearLang.builder(CreateNuclear.MOD_ID).text(TooltipHelper.makeProgressBar(5, heatLevel.ordinal()+1));
+            LangBuilder builder = CreateLang.builder(CreateNuclear.MOD_ID).text(TooltipHelper.makeProgressBar(5, heatLevel.ordinal()+1));
 
             builder.translate("tooltip.heatLevel." + Lang.asId(heatLevel.name()))
                     .space()

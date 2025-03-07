@@ -35,8 +35,6 @@ public class CreateNuclearDatagen {
         generator.addProvider(event.includeClient(), generatedEntriesProvider);
         generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output));
         generator.addProvider(event.includeClient(), new CNAdvancement(output));
-        CNProcessingRecipeGen.registerAll(generator, output);
-
 
         /*if (event.includeClient()) {
 

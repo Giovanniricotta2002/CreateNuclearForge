@@ -40,16 +40,17 @@ public abstract class CNProcessingRecipeGen extends CreateRecipeProvider {
 
 
         gen.addProvider(true, new DataProvider() {
+
+            @Override
+            public String getName() {
+                return "CreateNuclear's Processing Recipes";
+            }
+
             @Override
             public CompletableFuture<?> run(CachedOutput dc) {
                 return CompletableFuture.allOf(GENERATORS.stream()
                         .map(gen -> gen.run(dc))
                         .toArray(CompletableFuture[]::new));
-            }
-
-            @Override
-            public String getName() {
-                return "CreateNuclearForge Processing Recipe";
             }
         });
     }
@@ -138,10 +139,4 @@ public abstract class CNProcessingRecipeGen extends CreateRecipeProvider {
             return CreateNuclear.asResource(registryName.getPath() + suffix);
         };
     }
-
-//    @Override
-//    public String getName() {
-//        return "CreateNuclear's Processing Recipes: " + getRecipeType().getId()
-//                .getPath();
-//    }
 }

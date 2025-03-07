@@ -6,6 +6,7 @@ import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.utility.CreateLang;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.ChatFormatting;
@@ -77,9 +78,9 @@ public class ReactorOutputEntity extends GeneratingKineticBlockEntity {
 
         float stressBase = calculateAddedStressCapacity();
 
-        CreateNuclearLang.translate("gui.goggles.generator_stats")
+        CreateLang.translate("gui.goggles.generator_stats")
                 .forGoggles(tooltip);
-        CreateNuclearLang.translate("tooltip.capacityProvided")
+        CreateLang.translate("tooltip.capacityProvided")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
 
@@ -88,11 +89,11 @@ public class ReactorOutputEntity extends GeneratingKineticBlockEntity {
 
         float stressTotal = stressBase * speed;
 
-        CreateNuclearLang.number(stressTotal)
+        CreateLang.number(stressTotal)
                 .translate("generic.unit.stress")
                 .style(ChatFormatting.AQUA)
                 .space()
-                .add(CreateNuclearLang.translate("gui.goggles.at_current_speed")
+                .add(CreateLang.translate("gui.goggles.at_current_speed")
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
         return true;

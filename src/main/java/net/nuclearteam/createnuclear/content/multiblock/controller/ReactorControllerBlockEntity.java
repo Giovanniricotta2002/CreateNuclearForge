@@ -105,11 +105,12 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
         return Boolean.TRUE.equals(state.getValue(ASSEMBLED));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         if(!configuredPattern.getOrCreateTag().isEmpty()) {
-            tooltip.add(Component.literal("    ").plainCopy().append(CreateLang.translateDirect("gui.gauge.info_header")));
+            CreateLang.translate("gui.gauge.info_header")
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip);
             IHeat.HeatLevel.getName("reactor_controller").style(ChatFormatting.GRAY).forGoggles(tooltip);
 
             IHeat.HeatLevel.getFormattedHeatText(configuredPattern.getOrCreateTag().getInt("heat")).forGoggles(tooltip);
