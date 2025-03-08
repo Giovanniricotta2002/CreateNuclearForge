@@ -1,8 +1,12 @@
 package net.nuclearteam.createnuclear;
 
+import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -17,8 +21,8 @@ import net.minecraftforge.registries.RegistryObject;
 import net.nuclearteam.createnuclear.content.kinetics.fan.processing.EnrichedRecipe;
 import net.minecraft.world.level.Level;
 import net.nuclearteam.createnuclear.foundation.utility.CreateNuclearLang;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -38,7 +42,7 @@ public enum CNRecipeTypes implements IRecipeTypeInfo {
     private final Supplier<RecipeType<?>> type;
 
     CNRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> typeSupplier, boolean registerType) {
-        String name = CreateNuclearLang.asId(name());
+        String name = Lang.asId(name());
         id = CreateNuclear.asResource(name);
         serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
         if (registerType) {
@@ -51,7 +55,7 @@ public enum CNRecipeTypes implements IRecipeTypeInfo {
     }
 
     CNRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
-        String name = CreateNuclearLang.asId(name());
+        String name = Lang.asId(name());
         id = CreateNuclear.asResource(name);
         serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
         typeObject = Registers.TYPE_REGISTER.register(name, () -> RecipeType.simple(id));
