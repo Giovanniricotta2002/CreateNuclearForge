@@ -42,7 +42,6 @@ import net.nuclearteam.createnuclear.content.multiblock.output.ReactorOutputGene
 import net.nuclearteam.createnuclear.content.multiblock.reactorCooler.ReactorCooler;
 import net.nuclearteam.createnuclear.content.multiblock.reinforced.ReinforcedGlassBlock;
 import net.nuclearteam.createnuclear.content.uraniumOre.UraniumOreBlock;
-import net.nuclearteam.createnuclear.infrastructure.config.CNStress;
 
 import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -150,7 +149,7 @@ public class CNBlocks {
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag, CNBlockTags.NEEDS_DIAMOND_TOOL.tag)
                     .transform(pickaxeOnly())
                     .blockstate(new ReactorOutputGenerator()::generate)
-                    .transform(CStress.setCapacity(10240.0))
+                    .onRegister(block -> BlockStressValues.CAPACITIES.register(block, () -> 10240.0))
                     .item()
                     .transform(customItemModel("reactor", "output", "item"))
                     .register();
