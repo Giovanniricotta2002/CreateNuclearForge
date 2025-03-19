@@ -1,4 +1,4 @@
-package net.nuclearteam.createnuclear.foundation.Advancement;
+package net.nuclearteam.createnuclear.foundation.advancement;
 
 import com.google.common.collect.Sets;
 
@@ -13,7 +13,7 @@ import net.nuclearteam.createnuclear.CNBlocks;
 import net.nuclearteam.createnuclear.CNFluids;
 import net.nuclearteam.createnuclear.CNItems;
 import net.nuclearteam.createnuclear.CNTags;
-import net.nuclearteam.createnuclear.foundation.Advancement.CreateNuclearAdvancement.Builder;
+import net.nuclearteam.createnuclear.foundation.advancement.CreateNuclearAdvancement.Builder;
 
 
 import java.nio.file.Path;
@@ -26,8 +26,8 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 
-import static net.nuclearteam.createnuclear.foundation.Advancement.CreateNuclearAdvancement.TaskType.SILENT;
-import static net.nuclearteam.createnuclear.foundation.Advancement.CreateNuclearAdvancement.TaskType.SECRET;
+import static net.nuclearteam.createnuclear.foundation.advancement.CreateNuclearAdvancement.TaskType.SILENT;
+import static net.nuclearteam.createnuclear.foundation.advancement.CreateNuclearAdvancement.TaskType.SECRET;
 
 public class CNAdvancement implements DataProvider {
 
