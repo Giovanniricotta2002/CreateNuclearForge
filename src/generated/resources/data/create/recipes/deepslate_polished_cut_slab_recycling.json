@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "createnuclear:deepslate_polished_cut_slab"
+    },
+    {
+      "item": "createnuclear:deepslate_polished_cut_slab"
+    }
+  ],
+  "result": {
+    "item": "createnuclear:deepslate_polished_cut"
+  }
+}

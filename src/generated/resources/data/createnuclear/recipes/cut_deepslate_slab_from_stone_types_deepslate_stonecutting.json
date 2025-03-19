@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "tag": "createnuclear:stone_types/deepslate"
+  },
+  "result": "createnuclear:cut_deepslate_slab"
+}
