@@ -3,19 +3,16 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/lead"
+      "item": "createnuclear:lead_ingot"
     },
     "Y": {
       "item": "createnuclear:brown_cloth"
-    },
-    "Z": {
-      "item": "createnuclear:reinforced_glass"
     }
   },
   "pattern": [
     "YXY",
-    "Z Z",
-    "X X"
+    "X X",
+    "Y Y"
   ],
   "result": {
     "item": "createnuclear:brown_anti_radiation_leggings"
