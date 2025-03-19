@@ -164,7 +164,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
             .unlockedByTag(() -> CNTags.CNItemTags.CLOTH.tag)
             .withCategory(RecipeCategory.COMBAT)
             .viaShaped(i -> i
-                    .define('X', CNItems.LEAD_INGOT)
+                    .define('X', CNTags.forgeItemTag("ingots/lead"))
                     .define('Y', ClothItem.Cloths.getByColor(color).get())
                     .pattern("YXY")
                     .pattern("X X")
