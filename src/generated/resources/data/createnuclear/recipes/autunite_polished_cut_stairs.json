@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "autunite_polished_cut_stairs",
+  "key": {
+    "X": {
+      "item": "createnuclear:autunite_polished_cut"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "item": "createnuclear:autunite_polished_cut_stairs"
+  },
+  "show_notification": true
+}
