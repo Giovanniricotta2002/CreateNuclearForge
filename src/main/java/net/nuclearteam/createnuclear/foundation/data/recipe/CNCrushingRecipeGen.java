@@ -40,7 +40,38 @@ public class CNCrushingRecipeGen extends CNProcessingRecipeGen {
                 .output(1, CNItems.URANIUM_POWDER, 9)
         ),
         RAW_URANIUM_BLOCK = create(() -> CNBlocks.RAW_URANIUM_BLOCK, b -> b.duration(250)
-            .output(1, CNItems.URANIUM_POWDER,81))
+            .output(1, CNItems.URANIUM_POWDER,81)),
+
+        RAW_ZINC = create(() -> AllItems.RAW_ZINC, b -> b.duration(250)
+
+
+
+            .output(1, AllItems.CRUSHED_ZINC, 1)
+
+
+                .output(.75f, AllItems.EXP_NUGGET, 1)
+
+
+                .output(.25f, CNItems.LEAD_NUGGET,1)
+
+
+        ),
+
+
+    RAW_COPPER = create(() -> Items.RAW_COPPER, b -> b.duration(250)
+
+
+            .output(1, AllItems.CRUSHED_COPPER, 1)
+
+
+                .output(.75f, AllItems.EXP_NUGGET, 1)
+
+
+                .output(.15f, CNItems.LEAD_NUGGET,1)
+
+        )
+
+
     ;
 
     public CNCrushingRecipeGen(PackOutput generator) {
