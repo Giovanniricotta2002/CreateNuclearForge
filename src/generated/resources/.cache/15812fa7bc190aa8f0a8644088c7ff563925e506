@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-07T23:26:05.6423041	CreateNuclear's Processing Recipes
+// 1.20.1	2025-03-19T11:40:04.4388497	CreateNuclear's Processing Recipes
 d02fe65c0c4f06b58fa7565d7254902de5018e8b data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/black_cloth.json
 9690e12858db1c546576ce70847e723c005f814e data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/blue_cloth.json
 3bebcd85a99be0ddec8db66c5734232ac4bbd2ad data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/brown_cloth.json
@@ -27,7 +27,9 @@ f0d205d168427e468bffe76d4400305528d701b5 data/createnuclear/recipes/compacting/u
 24c35af7a9dc3d740f3200bdd1ad96ad125df00a data/createnuclear/recipes/crushing/coal.json
 2a8b609dba5bad88511d9c9a80cf6fb582b18c36 data/createnuclear/recipes/crushing/fix/crushed_raw_uranium.json
 57154e35ebb09170bb39f5b3a72ecd49182697f2 data/createnuclear/recipes/crushing/granite.json
+4feb59d85e86e34ed565c18b6a4df120fe050bc7 data/createnuclear/recipes/crushing/raw_copper.json
 cf17713133d3e05e99164e2ea6649de3aef017fd data/createnuclear/recipes/crushing/raw_uranium_block.json
+26d2787e831b9986ed6f90f8ea803d5fdc544bf5 data/createnuclear/recipes/crushing/raw_zinc.json
 e42be7d17c5e057e62c4b1176cbf43319a157f51 data/createnuclear/recipes/enriched/enriched_yellowcake.json
 74555eb2cce0827f99dc5c4ff91362bdaecad725 data/createnuclear/recipes/enriched/enriching_campfire.json
 5cee3df3d7c7cd41d6a94a36b713dddc77f2acc4 data/createnuclear/recipes/item_application/reactor_casing_from_steel_and_brass_casing.json
