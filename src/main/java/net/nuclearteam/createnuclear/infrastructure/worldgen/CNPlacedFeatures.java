@@ -1,6 +1,5 @@
 package net.nuclearteam.createnuclear.infrastructure.worldgen;
 
-import com.simibubi.create.infrastructure.worldgen.AllConfiguredFeatures;
 import com.simibubi.create.infrastructure.worldgen.ConfigPlacementFilter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -35,7 +34,7 @@ public class CNPlacedFeatures {
 
         register(ctx, URANIUM_ORE, uraniumOre, placement(CountPlacement.of(6), -64, 64));
         register(ctx, LEAD_ORE, leadOre, placement(CountPlacement.of(6), -64, 64));
-        register(ctx, STRIATED_ORES_OVERWORLD, striatedOresOverworld, placement(RarityFilter.onAverageOnceEvery(100/*18*/), -30, 70));
+        register(ctx, STRIATED_ORES_OVERWORLD, striatedOresOverworld, placement(RarityFilter.onAverageOnceEvery(18), -30, 70));
 
     }
 
