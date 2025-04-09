@@ -1,4 +1,4 @@
-package net.nuclearteam.createnuclear.foundation.Advancement;
+package net.nuclearteam.createnuclear.foundation.advancement;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.SimpleCreateTrigger;

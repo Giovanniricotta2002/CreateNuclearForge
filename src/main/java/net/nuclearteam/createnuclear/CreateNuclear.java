@@ -24,6 +24,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteBlocks;
 import net.nuclearteam.createnuclear.content.kinetics.fan.processing.CNFanProcessingTypes;
+import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
 import net.nuclearteam.createnuclear.infrastructure.data.CreateNuclearDatagen;
 import org.slf4j.Logger;
 
@@ -64,6 +65,8 @@ public class CreateNuclear {
         CNFluids.register();
         CNEntityType.register();
         CNPaletteBlocks.register();
+
+        CNConfigs.register(modLoadingContext);
 
         CNCreativeModeTabs.register(modEventBus);
         CNEffects.register(modEventBus);
