@@ -32,17 +32,26 @@ public class CNPlacedFeatures {
         Holder<ConfiguredFeature<?, ?>> leadOre = featureLookup.getOrThrow(CNConfiguredFeatures.LEAD_ORE);
         Holder<ConfiguredFeature<?, ?>> striatedOresOverworld = featureLookup.getOrThrow(CNConfiguredFeatures.STRIATED_ORES_OVERWORLD);
 
-        register(ctx, URANIUM_ORE, uraniumOre, placement(CountPlacement.of(6), -64, 64));
-        register(ctx, LEAD_ORE, leadOre, placement(CountPlacement.of(6), -64, 64));
+        register(ctx, URANIUM_ORE, uraniumOre, placementOres(CountPlacement.of(6), -64, 64));
+        register(ctx, LEAD_ORE, leadOre, placementOres(CountPlacement.of(6), -64, 64));
         register(ctx, STRIATED_ORES_OVERWORLD, striatedOresOverworld, placement(RarityFilter.onAverageOnceEvery(18), -30, 70));
 
+    }
+
+    private static List<PlacementModifier> placementOres(PlacementModifier frequency, int minHeight, int maxHeight) {
+        return List.of(
+                frequency,
+                InSquarePlacement.spread(),
+                HeightRangePlacement.triangle(VerticalAnchor.absolute(minHeight), VerticalAnchor.absolute(maxHeight)),
+                ConfigPlacementFilter.INSTANCE
+        );
     }
 
     private static List<PlacementModifier> placement(PlacementModifier frequency, int minHeight, int maxHeight) {
         return List.of(
                 frequency,
                 InSquarePlacement.spread(),
-                HeightRangePlacement.triangle(VerticalAnchor.absolute(minHeight), VerticalAnchor.absolute(maxHeight)),
+                HeightRangePlacement.uniform(VerticalAnchor.absolute(minHeight), VerticalAnchor.absolute(maxHeight)),
                 ConfigPlacementFilter.INSTANCE
         );
     }
