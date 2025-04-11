@@ -1,5 +1,8 @@
 package net.nuclearteam.createnuclear.infrastructure.worldgen;
 
+import com.simibubi.create.infrastructure.worldgen.AllFeatures;
+import com.simibubi.create.infrastructure.worldgen.LayerPattern;
+import com.simibubi.create.infrastructure.worldgen.LayeredOreConfiguration;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -16,10 +19,11 @@ import static net.minecraft.data.worldgen.features.FeatureUtils.register;
 
 import java.util.List;
 
-public class CNCOnfiguredFeatures {
+public class CNConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>>
         URANIUM_ORE = key("uranium_ore"),
-        LEAD_ORE = key("lead_ore")
+        LEAD_ORE = key("lead_ore"),
+        STRIATED_ORES_OVERWORLD = key("striated_ores_overworld")
     ;
 
     private static ResourceKey<ConfiguredFeature<?, ?>> key(String name) {
@@ -43,5 +47,11 @@ public class CNCOnfiguredFeatures {
         );
 
         register(ctx, LEAD_ORE, Feature.ORE, new OreConfiguration(leadTargetStates, 7));
+
+        List<LayerPattern> overworldLayerPatterns = List.of(
+                CNLayerPatterns.AUTUNITE.get()
+        );
+
+        register(ctx, STRIATED_ORES_OVERWORLD, AllFeatures.LAYERED_ORE.get(), new LayeredOreConfiguration(overworldLayerPatterns, 32, 0));
     }
 }
