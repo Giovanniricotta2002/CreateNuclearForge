@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-07T23:26:05.6554053	Registrate Provider for createnuclear [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2025-04-30T15:40:28.0620136	Registrate Provider for createnuclear [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 5cf183e5277aea7ac5eb2bfa88737db909c6244d assets/createnuclear/blockstates/deepslate_lead_ore.json
 a6f90dfcfc0659663335d4c80129ce41d0c8e47a assets/createnuclear/blockstates/deepslate_uranium_ore.json
 e11c7fa5830b0877af69bb18e650d2b1e6f90027 assets/createnuclear/blockstates/enriched_soul_soil.json
@@ -205,6 +205,10 @@ cdebf2b4eabcf71ee4566b7fbf22f18990a4e06b data/forge/tags/items/raw_materials.jso
 03a88f0d9f44d3c338b82bf92b22a14dec490bef data/forge/tags/items/raw_materials/uranium.json
 cdebf2b4eabcf71ee4566b7fbf22f18990a4e06b data/forge/tags/items/raw_ores.json
 c1ad472460350e6abd024de7785cd870dad05cd9 data/forge/tags/items/rods.json
+a7258ae3454252e874b324fbd81b880ce52759c4 data/forge/tags/items/storage_blocks/lead.json
+2b32fe875f887d4a406700d35e0fe5a93548ebb7 data/forge/tags/items/storage_blocks/raw_lead.json
+0aafd338eaffcc3f48fb8dc9d18fc969318b06e0 data/forge/tags/items/storage_blocks/raw_uranium.json
+f8074cdbc6e2b560acb4e9da953b23f9825486a6 data/forge/tags/items/storage_blocks/steel.json
 e84d8e1fa924bec3e226b8917b4973b9629a5f52 data/minecraft/tags/blocks/all/campfires.json
 e84d8e1fa924bec3e226b8917b4973b9629a5f52 data/minecraft/tags/blocks/campfires.json
 3206babfa42429478935375acd710b4028884941 data/minecraft/tags/blocks/dragon_transparent.json
