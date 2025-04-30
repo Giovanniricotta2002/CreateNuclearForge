@@ -12,9 +12,13 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import org.joml.Vector3f;
@@ -59,6 +63,29 @@ public class CNFluids {
             }
         }
 
+    }
+
+    public static void registerFluidInteractions() {
+        FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+            URANIUM.get().getFluidType(),
+            (fluidState) -> {
+                if (fluidState.isSource()) {
+                    return Blocks.BLACKSTONE.defaultBlockState();
+                } else {
+                    return Blocks.LIGHT_GRAY_SHULKER_BOX.defaultBlockState();
+                }
+            }
+        ));
+        FluidInteractionRegistry.addInteraction(ForgeMod.WATER_TYPE.get(), new InteractionInformation(
+                URANIUM.get().getFluidType(),
+                fluidState -> {
+                    if (fluidState.isSource()) {
+                        return Blocks.ACACIA_LOG.defaultBlockState();
+                    } else {
+                        return Blocks.BEACON.defaultBlockState();
+                    }
+                }
+        ));
     }
 
     private static class SolidRenderedPlaceableFluidtype extends AllFluids.TintedFluidType {

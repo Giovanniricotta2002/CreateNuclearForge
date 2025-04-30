@@ -81,6 +81,7 @@ public class CreateNuclear {
     }
 
     public static void init(final FMLCommonSetupEvent event) {
+        CNFluids.registerFluidInteractions();
         event.enqueueWork(CNPotions::registerPotionsRecipes);
     }
 
