@@ -40,8 +40,7 @@ public class CNCrushingRecipeGen extends CNProcessingRecipeGen {
             .output(1f, Blocks.RED_SAND)
         ),
 
-        FIX_RAW_URANIUM_FOR_FORGE = createFix(CreateNuclear.MOD_ID, () -> AllItems.CRUSHED_URANIUM::get, b -> b
-                .duration(255)
+        FIX_RAW_URANIUM_FOR_FORGE = createFix(CreateNuclear.MOD_ID, () -> AllItems.CRUSHED_URANIUM::get, b -> b.duration(255)
                 .output(1, CNItems.URANIUM_POWDER, 9)
         ),
         RAW_URANIUM_BLOCK = create(() -> CNBlocks.RAW_URANIUM_BLOCK, b -> b.duration(250)
