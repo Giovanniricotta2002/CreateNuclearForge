@@ -39,8 +39,11 @@ public class CNClientEvent {
                 .forEach(o -> o.render(gfx, partialTicks));
     }
 
-    @SubscribeEvent
-    public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        CNEntityType.registerModelLayer(event);
+    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class CommentEventClients {
+        @SubscribeEvent
+        public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+            CNEntityType.registerModelLayer(event);
+        }
     }
 }

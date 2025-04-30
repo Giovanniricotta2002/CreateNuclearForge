@@ -47,6 +47,7 @@ public class HelmetOverlay  implements HudOverlay {
 
     @Override
     public void render(GuiGraphics graphics, float partialTicks) {
+        CreateNuclear.LOGGER.warn("hum HelmetOverlay");
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack helmet = player.getInventory().getArmor(EquipmentSlot.HEAD.getIndex());
