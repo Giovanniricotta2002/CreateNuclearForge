@@ -1,4 +1,4 @@
-// 1.20.1	2025-02-28T17:09:02.4440454	CreateNuclearForge Processing Recipe
+// 1.20.1	2025-04-30T17:07:14.5069349	CreateNuclearForge Processing Recipe
 d02fe65c0c4f06b58fa7565d7254902de5018e8b data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/black_cloth.json
 9690e12858db1c546576ce70847e723c005f814e data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/blue_cloth.json
 3bebcd85a99be0ddec8db66c5734232ac4bbd2ad data/createnuclear/advancements/recipes/building_blocks/shapeless/cloth/brown_cloth.json
@@ -27,7 +27,8 @@ f0d205d168427e468bffe76d4400305528d701b5 data/createnuclear/recipes/compacting/u
 24c35af7a9dc3d740f3200bdd1ad96ad125df00a data/createnuclear/recipes/crushing/coal.json
 2a8b609dba5bad88511d9c9a80cf6fb582b18c36 data/createnuclear/recipes/crushing/fix/crushed_raw_uranium.json
 57154e35ebb09170bb39f5b3a72ecd49182697f2 data/createnuclear/recipes/crushing/granite.json
-cf17713133d3e05e99164e2ea6649de3aef017fd data/createnuclear/recipes/crushing/raw_uranium_block.json
+6cb73e79475790b219fcd59290d61f773f750e77 data/createnuclear/recipes/crushing/raw_lead_block.json
+94e6ba2d5f151fbf98d3a652275b5ea2fbd1d769 data/createnuclear/recipes/crushing/raw_uranium_block.json
 e42be7d17c5e057e62c4b1176cbf43319a157f51 data/createnuclear/recipes/enriched/enriched_yellowcake.json
 74555eb2cce0827f99dc5c4ff91362bdaecad725 data/createnuclear/recipes/enriched/enriching_campfire.json
 5cee3df3d7c7cd41d6a94a36b713dddc77f2acc4 data/createnuclear/recipes/item_application/reactor_casing_from_steel_and_brass_casing.json
@@ -65,3 +66,4 @@ ee9f6e45a6c733f1ce2a702c868b60a0d96bbb13 data/createnuclear/recipes/shapeless/ra
 8e194709b50fd2ca2ef2138b5d2528e092b45e4f data/createnuclear/recipes/shapeless/reactor_blueprint_item_clear.json
 cea8045f8f5fae828c41c0fae8236cb4560b3d61 data/createnuclear/recipes/shapeless/steel_ingot_from_decompacting.json
 106b21181a49e73524be22319ba318719b7db0c9 data/createnuclear/recipes/shapeless/steel_nugget_from_decompacting.json
+4ee934a60476e0d3d0d77297406d8d6aea65af2c data/create/recipes/splashing/crushed_raw_lead.json

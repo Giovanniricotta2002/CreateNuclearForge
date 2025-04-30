@@ -4,6 +4,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.TypeRewriteRule;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
@@ -191,7 +192,8 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
     GeneratedRecipe
         URANIUM_ORE_TO_URANIUM_POWDER = blastFurnaceRecipeTags(() -> CNItems.RAW_URANIUM::get, () -> CNTags.CNItemTags.URANIUM_ORES.tag, "_for_uranium_ore", 4),
         RAW_LEAD_ORES = blastFurnaceRecipeTags(() -> CNItems.LEAD_INGOT::get, () -> CNTags.CNItemTags.LEAD_ORES.tag, "_for_lead_ore", 1),
-        RAW_LEAD = blastFurnaceRecipe(CNItems.LEAD_INGOT::get, CNItems.RAW_LEAD::get, "_for_raw_lead", 1)
+        RAW_LEAD = blastFurnaceRecipe(CNItems.LEAD_INGOT::get, CNItems.RAW_LEAD::get, "_for_raw_lead", 1),
+        CRUSHED_LEAD = blastFurnaceRecipe(() -> CNItems.LEAD_INGOT::get, () -> AllItems.CRUSHED_LEAD, "_for_crushed_lead", 1)
     ;
 
 
