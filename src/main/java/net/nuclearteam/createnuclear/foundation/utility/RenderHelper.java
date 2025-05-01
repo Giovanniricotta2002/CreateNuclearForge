@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.utility;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
@@ -32,12 +33,15 @@ public class RenderHelper {
             // Simple blit without scaling
             graphics.blit(texture, 0, 0, -90, 0, 0, width, height, width, height);
         } else {
-            // Blit with scaling centered on screen
+            // Blit with scaling centered on the screen
             graphics.pose().pushPose();
             graphics.pose().translate(width / 2f, height / 2f, 0);
-            graphics.pose().scale(coverage, coverage, 1f);
+            //graphics.pose().scale(coverage, coverage, 1f);
+
             graphics.pose().translate(-width / 2f, -height / 2f, 0);
+            RenderSystem.enableBlend();
             graphics.blit(texture, 0, 0, -90, 0, 0, width, height, width, height);
+            RenderSystem.disableBlend();
             graphics.pose().popPose();
         }
     }
@@ -62,6 +66,8 @@ public class RenderHelper {
         graphics.setColor(1f, 1f, 1f, alpha);
 
         // Simple blit without scaling (normal size)
+        RenderSystem.enableBlend();
         graphics.blit(texture, 0, 0, -90, 0, 0, width, height, width, height);
+        RenderSystem.disableBlend();
     }
 }
