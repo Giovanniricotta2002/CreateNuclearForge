@@ -3,6 +3,7 @@ package net.nuclearteam.createnuclear.foundation.utility;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.nuclearteam.createnuclear.CreateNuclear;
 
 /**
  * Helper class for rendering full-screen overlays with optional scaling and caching.
@@ -29,6 +30,7 @@ public class RenderHelper {
         int height = graphics.guiHeight();
         graphics.setColor(1f, 1f, 1f, alpha);
 
+        RenderSystem.enableBlend();
         if (coverage == 1f) {
             // Simple blit without scaling
             graphics.blit(texture, 0, 0, -90, 0, 0, width, height, width, height);
@@ -39,11 +41,10 @@ public class RenderHelper {
             //graphics.pose().scale(coverage, coverage, 1f);
 
             graphics.pose().translate(-width / 2f, -height / 2f, 0);
-            RenderSystem.enableBlend();
             graphics.blit(texture, 0, 0, -90, 0, 0, width, height, width, height);
-            RenderSystem.disableBlend();
             graphics.pose().popPose();
         }
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -56,8 +57,6 @@ public class RenderHelper {
      */
     public static void renderTextureOverlay(GuiGraphics graphics, ResourceLocation texture, float alpha) {
         // Skip rendering if parameters unchanged
-        if (alpha == lastAlpha) return;
-        lastAlpha = alpha;
 
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
