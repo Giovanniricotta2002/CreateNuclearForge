@@ -31,18 +31,18 @@ public class CNConfiguredFeatures {
     }
 
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> ctx) {
-        RuleTest stoneOreReplaceables = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
+        RuleTest stoneOreReplaceable = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
         RuleTest deepslateOreReplaceables = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 
         List<TargetBlockState> uraniumTargetStates = List.of(
-                OreConfiguration.target(stoneOreReplaceables, CNBlocks.URANIUM_ORE.getDefaultState()),
+                OreConfiguration.target(stoneOreReplaceable, CNBlocks.URANIUM_ORE.getDefaultState()),
                 OreConfiguration.target(deepslateOreReplaceables, CNBlocks.DEEPSLATE_URANIUM_ORE.getDefaultState())
         );
 
         register(ctx, URANIUM_ORE, Feature.ORE, new OreConfiguration(uraniumTargetStates, 7));
 
         List<TargetBlockState> leadTargetStates = List.of(
-                OreConfiguration.target(stoneOreReplaceables, CNBlocks.LEAD_ORE.getDefaultState()),
+                OreConfiguration.target(stoneOreReplaceable, CNBlocks.LEAD_ORE.getDefaultState()),
                 OreConfiguration.target(deepslateOreReplaceables, CNBlocks.DEEPSLATE_LEAD_ORE.getDefaultState())
         );
 

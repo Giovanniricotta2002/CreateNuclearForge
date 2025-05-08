@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // 1.20.1	2025-04-06T16:36:02.0389366	Registrate Provider for createnuclear [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 0b2c76c9cff305eacfdfb57c4b703f94ca6dc903 assets/createnuclear/blockstates/autunite.json
 5d06bc544bcbeb7443178d66955bb5101cf696da assets/createnuclear/blockstates/autunite_pillar.json
@@ -9,6 +10,9 @@ b88d65e7a3393caeaed8d504bf6c4615767371aa assets/createnuclear/blockstates/cut_au
 1e246d1862a801b2253595d7fac7717a0110ce79 assets/createnuclear/blockstates/cut_autunite_slab.json
 56c308e675a047a3d28757377e61e5f79c6384e3 assets/createnuclear/blockstates/cut_autunite_stairs.json
 98d386985f7c185f1acab25b9d606828f788769f assets/createnuclear/blockstates/cut_autunite_wall.json
+=======
+// 1.20.1	2025-05-08T16:23:43.3619434	Registrate Provider for createnuclear [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+>>>>>>> main
 5cf183e5277aea7ac5eb2bfa88737db909c6244d assets/createnuclear/blockstates/deepslate_lead_ore.json
 a6f90dfcfc0659663335d4c80129ce41d0c8e47a assets/createnuclear/blockstates/deepslate_uranium_ore.json
 e11c7fa5830b0877af69bb18e650d2b1e6f90027 assets/createnuclear/blockstates/enriched_soul_soil.json
@@ -38,6 +42,7 @@ a2fc21fa320e677fe7690b260ee3f57ebdbd50b6 assets/createnuclear/blockstates/small_
 57c846a957e9250bc45f2f1091bf3f78b2a77344 assets/createnuclear/blockstates/steel_block.json
 de2884054a21315d8b167f64b206be331d388420 assets/createnuclear/blockstates/uranium.json
 4557f548df100ae1d05e3b5711797225f6a39673 assets/createnuclear/blockstates/uranium_ore.json
+<<<<<<< HEAD
 db6df0c9f4a72bf4e7520c6f0dde6c16392c6f45 assets/createnuclear/lang/en_ud.json
 9985d553d3dfd330242908e4d7df5db2fb480ef4 assets/createnuclear/lang/en_us.json
 a8495d2cd5e38213683becaf1c84b2852f8b06f5 assets/createnuclear/models/block/autunite_natural_0.json
@@ -64,6 +69,10 @@ e1e1e4bff55028860d776d8ecb992547fa12b1b5 assets/createnuclear/models/block/cut_a
 05c9937ab6b920dfbbab6c78d115cc0bff6b8d22 assets/createnuclear/models/block/cut_autunite_wall_post.json
 baced15580735dd63848a96763f8c7ffe61f3376 assets/createnuclear/models/block/cut_autunite_wall_side.json
 cd15b5be0dca5f621266b157b424ac37dac859dd assets/createnuclear/models/block/cut_autunite_wall_side_tall.json
+=======
+1fa3610e24bdf3a0e5beb0889a872c75ad18d8a2 assets/createnuclear/lang/en_ud.json
+6e150e6a5150038af732a3a8c5fcbd788722a9ef assets/createnuclear/lang/en_us.json
+>>>>>>> main
 9a589577d80aa23ac97312bda605b5512eff5167 assets/createnuclear/models/block/deepslate_lead_ore.json
 6793dd91b730f4c9abea29215de16cd0751d8cbd assets/createnuclear/models/block/deepslate_uranium_ore.json
 e1b8fdc0555a1fdabda54f66cca868e444d1110b assets/createnuclear/models/block/enriched_soul_soil.json
@@ -377,6 +386,10 @@ cdebf2b4eabcf71ee4566b7fbf22f18990a4e06b data/forge/tags/items/raw_materials.jso
 03a88f0d9f44d3c338b82bf92b22a14dec490bef data/forge/tags/items/raw_materials/uranium.json
 cdebf2b4eabcf71ee4566b7fbf22f18990a4e06b data/forge/tags/items/raw_ores.json
 c1ad472460350e6abd024de7785cd870dad05cd9 data/forge/tags/items/rods.json
+a7258ae3454252e874b324fbd81b880ce52759c4 data/forge/tags/items/storage_blocks/lead.json
+2b32fe875f887d4a406700d35e0fe5a93548ebb7 data/forge/tags/items/storage_blocks/raw_lead.json
+0aafd338eaffcc3f48fb8dc9d18fc969318b06e0 data/forge/tags/items/storage_blocks/raw_uranium.json
+f8074cdbc6e2b560acb4e9da953b23f9825486a6 data/forge/tags/items/storage_blocks/steel.json
 e84d8e1fa924bec3e226b8917b4973b9629a5f52 data/minecraft/tags/blocks/all/campfires.json
 8875ba7215b30d75573e3dcfe46e0b690b1d7f2f data/minecraft/tags/blocks/azalea_root_replaceable.json
 e84d8e1fa924bec3e226b8917b4973b9629a5f52 data/minecraft/tags/blocks/campfires.json

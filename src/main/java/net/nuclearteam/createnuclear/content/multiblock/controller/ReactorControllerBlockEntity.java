@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.nuclearteam.createnuclear.CNBlocks;
 import net.nuclearteam.createnuclear.CNItems;
+import net.nuclearteam.createnuclear.CNPackets;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.content.multiblock.IHeat;
 import net.nuclearteam.createnuclear.content.multiblock.input.ReactorInputEntity;
@@ -230,6 +231,10 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
                         if (IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.SAFETY || IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.CAUTION || IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.WARNING) {
                             this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), heat/4);
                         } else {
+                            // Send a packet to all clients around this block within 16 blocks
+                            EventTriggerPacket packet = new EventTriggerPacket(600); // display for 100 ticks
+                            CreateNuclear.LOGGER.warn("hum EventTriggerBlock ? {}", packet);
+                            CNPackets.sendToNear(level, getBlockPos(), 32, packet);
                             this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), 0);
                         }
                         return;
