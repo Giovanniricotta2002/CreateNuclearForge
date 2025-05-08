@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class CNItems {
 
     public static final ItemEntry<Item>
-            YELLOWCAKE = CreateNuclear.REGISTRATE
+        YELLOWCAKE = CreateNuclear.REGISTRATE
             .item("yellowcake", Item::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(20)
@@ -79,21 +79,21 @@ public class CNItems {
                 .tag(CNTags.forgeItemTag("nuggets"), CNTags.forgeItemTag("nuggets/steel"))
                 .register(),
 
-    URANIUM_ROD = CreateNuclear.REGISTRATE
+        URANIUM_ROD = CreateNuclear.REGISTRATE
             .item("uranium_rod", Item::new)
             .tag(CNTags.forgeItemTag("rods"), CNItemTags.FUEL.tag)
             .register(),
 
-    LEAD_NUGGET = CreateNuclear.REGISTRATE
+        LEAD_NUGGET = CreateNuclear.REGISTRATE
             .item("lead_nugget", Item::new)
             .tag(CNTags.forgeItemTag("nuggets"), CNTags.forgeItemTag("nuggets/lead"))
             .register(),
 
-    GRAPHENE = CreateNuclear.REGISTRATE
+        GRAPHENE = CreateNuclear.REGISTRATE
             .item("graphene", Item::new)
             .register(),
 
-    ENRICHED_YELLOWCAKE = CreateNuclear.REGISTRATE
+        ENRICHED_YELLOWCAKE = CreateNuclear.REGISTRATE
             .item("enriched_yellowcake", Item::new)
             .register()
     ;

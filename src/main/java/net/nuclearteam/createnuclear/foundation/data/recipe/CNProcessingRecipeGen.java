@@ -27,8 +27,6 @@ public abstract class CNProcessingRecipeGen extends CreateRecipeProvider {
     protected static final List<CNProcessingRecipeGen> GENERATORS = new ArrayList<>();
 
     public static void registerAll(DataGenerator gen, PackOutput output) {
-
-
         GENERATORS.add(new CNCompactingRecipeGen(output));
         GENERATORS.add(new CNMechanicalCraftingRecipeGen(output));
         GENERATORS.add(new CNItemApplicationRecipeGen(output));

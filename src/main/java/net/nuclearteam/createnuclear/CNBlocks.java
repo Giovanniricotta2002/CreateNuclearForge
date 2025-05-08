@@ -336,26 +336,32 @@ public class CNBlocks {
     public static final BlockEntry<Block> RAW_URANIUM_BLOCK =
             CreateNuclear.REGISTRATE.block("raw_uranium_block", Block::new)
                     .initialProperties(SharedProperties::stone)
-                    .simpleItem()
                     .transform(pickaxeOnly())
                     .tag(CNTags.CNBlockTags.NEEDS_DIAMOND_TOOL.tag,
                             CNTags.forgeBlockTag("storage_blocks/raw_uranium"))
+                    .item()
+                    .tag(CNTags.forgeItemTag("storage_blocks/raw_uranium"))
+                    .build()
                     .register();
 
     public static final BlockEntry<Block> RAW_LEAD_BLOCK =
             CreateNuclear.REGISTRATE.block("raw_lead_block", Block::new)
                     .initialProperties(SharedProperties::stone)
-                    .simpleItem()
                     .transform(pickaxeOnly())
                     .tag(CNTags.forgeBlockTag("storage_blocks/raw_lead"))
+                    .item()
+                    .tag(CNTags.forgeItemTag("storage_blocks/raw_lead"))
+                    .build()
                     .register();
 
     public static final BlockEntry<Block> LEAD_BLOCK =
             CreateNuclear.REGISTRATE.block("lead_block", Block::new)
                     .initialProperties(SharedProperties::stone)
-                    .simpleItem()
                     .transform(pickaxeOnly())
                     .tag(CNTags.forgeBlockTag("storage_blocks/lead"))
+                    .item()
+                    .tag(CNTags.forgeItemTag("storage_blocks/lead"))
+                    .build()
                     .register();
 
     public static final BlockEntry<Block> ENRICHED_SOUL_SOIL =
@@ -412,9 +418,11 @@ public class CNBlocks {
     public static final BlockEntry<Block> STEEL_BLOCK =
             CreateNuclear.REGISTRATE.block("steel_block", Block::new)
                     .initialProperties(SharedProperties::stone)
-                    .simpleItem()
                     .transform(pickaxeOnly())
                     .tag(CNTags.forgeBlockTag("storage_blocks/steel"))
+                    .item()
+                    .tag(CNTags.forgeItemTag("storage_blocks/steel"))
+                    .build()
                     .register();
 
     /*public static final BlockEntry<EventTriggerBlock> TEST_EVENT_TRIGGER_BLOCK = CreateNuclear.REGISTRATE.block("test_event_trigger_block", EventTriggerBlock::new)
