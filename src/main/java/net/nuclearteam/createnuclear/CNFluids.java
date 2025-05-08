@@ -52,7 +52,7 @@ public class CNFluids {
 
     public static void handleFluidEffect(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.isAlive() && !(entity.isSpectator() || entity instanceof Player player && player.isCreative())) {
+        if (entity.isAlive() && !(entity.isSpectator())) {
             if (entity.tickCount % 20 == 0) return;
             if (entity.isInFluidType(URANIUM.getType())) {
                 entity.addEffect(new MobEffectInstance(CNEffects.RADIATION.get(), 100, 0));

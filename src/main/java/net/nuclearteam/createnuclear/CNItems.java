@@ -12,9 +12,10 @@ import static net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiatio
 
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
@@ -28,8 +29,15 @@ import java.util.function.Supplier;
 public class CNItems {
 
     public static final ItemEntry<Item>
-        YELLOWCAKE = CreateNuclear.REGISTRATE
+            YELLOWCAKE = CreateNuclear.REGISTRATE
             .item("yellowcake", Item::new)
+            .properties(p -> p.food(new FoodProperties.Builder()
+                    .nutrition(20)
+                    .saturationMod(0.3F)
+                    .alwaysEat()
+                    .effect((new MobEffectInstance(CNEffects.RADIATION.get(),600,2)) , 1.0F)
+                    .build())
+            )
             .register(),
 
         RAW_LEAD = CreateNuclear.REGISTRATE
