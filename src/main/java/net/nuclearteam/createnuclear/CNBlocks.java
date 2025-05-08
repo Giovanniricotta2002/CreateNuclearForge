@@ -42,6 +42,7 @@ import net.nuclearteam.createnuclear.content.multiblock.output.ReactorOutputGene
 import net.nuclearteam.createnuclear.content.multiblock.reactorCooler.ReactorCooler;
 import net.nuclearteam.createnuclear.content.multiblock.reinforced.ReinforcedGlassBlock;
 import net.nuclearteam.createnuclear.content.uraniumOre.UraniumOreBlock;
+import net.nuclearteam.createnuclear.foundation.block.EventTriggerBlock;
 
 import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -423,6 +424,12 @@ public class CNBlocks {
                     .tag(CNTags.forgeItemTag("storage_blocks/steel"))
                     .build()
                     .register();
+
+    /*public static final BlockEntry<EventTriggerBlock> TEST_EVENT_TRIGGER_BLOCK = CreateNuclear.REGISTRATE.block("test_event_trigger_block", EventTriggerBlock::new)
+            .defaultBlockstate()
+            .defaultLang()
+            .simpleItem()
+            .register();*/
 
 
     public static void register() {
