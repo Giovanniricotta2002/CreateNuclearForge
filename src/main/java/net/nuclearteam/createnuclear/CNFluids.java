@@ -12,14 +12,22 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteStoneTypes;
 import org.joml.Vector3f;
 import net.nuclearteam.createnuclear.CNTags.CNFluidTags;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class CNFluids {
@@ -59,6 +67,25 @@ public class CNFluids {
             }
         }
 
+    }
+
+    public static void registerFluidInteractions() {
+        // Supplier for the common BlockState to return (Autunite)
+        Supplier<BlockState> autuniteState = () -> CNPaletteStoneTypes.AUTUNITE.getBaseBlock().get().defaultBlockState();
+
+        // The FluidType that all interactions will target (uranium)
+        FluidType uraniumType = URANIUM.get().getFluidType();
+
+        // List of source FluidTypes we want to register (lava and water)
+        List<FluidType> sourceFluids = List.of(
+            ForgeMod.LAVA_TYPE.get(),
+            ForgeMod.WATER_TYPE.get()
+        );
+
+        // Loop over each source fluid and register the interaction
+        for (FluidType source : sourceFluids) {
+            FluidInteractionRegistry.addInteraction(source, new InteractionInformation(uraniumType, fs -> autuniteState.get()));
+        }
     }
 
     private static class SolidRenderedPlaceableFluidtype extends AllFluids.TintedFluidType {

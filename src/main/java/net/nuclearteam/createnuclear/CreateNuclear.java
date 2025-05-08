@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
+import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteBlocks;
 import net.nuclearteam.createnuclear.content.kinetics.fan.processing.CNFanProcessingTypes;
 import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
 import net.nuclearteam.createnuclear.infrastructure.data.CreateNuclearDatagen;
@@ -63,6 +64,7 @@ public class CreateNuclear {
         CNMenus.register();
         CNFluids.register();
         CNEntityType.register();
+        CNPaletteBlocks.register();
 
         CNConfigs.register(modLoadingContext);
 
@@ -81,6 +83,7 @@ public class CreateNuclear {
     }
 
     public static void init(final FMLCommonSetupEvent event) {
+        CNFluids.registerFluidInteractions();
         event.enqueueWork(CNPotions::registerPotionsRecipes);
     }
 
