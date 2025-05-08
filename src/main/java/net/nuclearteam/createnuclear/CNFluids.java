@@ -1,9 +1,9 @@
 package net.nuclearteam.createnuclear;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.foundation.utility.Color;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -52,7 +52,7 @@ public class CNFluids {
 
     public static void handleFluidEffect(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.isAlive() && !(entity.isSpectator() || entity instanceof Player player && player.isCreative())) {
+        if (entity.isAlive() && !(entity.isSpectator())) {
             if (entity.tickCount % 20 == 0) return;
             if (entity.isInFluidType(URANIUM.getType())) {
                 entity.addEffect(new MobEffectInstance(CNEffects.RADIATION.get(), 100, 0));

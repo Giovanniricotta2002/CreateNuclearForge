@@ -8,8 +8,8 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -33,7 +33,6 @@ import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -162,20 +161,19 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
             )
         ),
 
-        ANTI_RADIATION_LEGGINS = new AntiRadiationArmorItem.DyeRecipArmorList(color -> create(CNItems.ANTI_RADIATION_LEGGINGS.get(color))
-                .unlockedByTag(() -> CNTags.CNItemTags.CLOTH.tag)
-                .withCategory(RecipeCategory.COMBAT)
-                .viaShaped(i -> i
-                        .define('X', CNTags.forgeItemTag("ingots/lead"))
-                        .define('Y', ClothItem.Cloths.getByColor(color).get())
-                        .define('Z', CNBlocks.REINFORCED_GLASS)
-                        .pattern("YXY")
-                        .pattern("Z Z")
-                        .pattern("X X")
-                        .showNotification(true)
-                )
-        )
-    ;
+    ANTI_RADIATION_LEGGINS = new AntiRadiationArmorItem.DyeRecipArmorList(color -> create(CNItems.ANTI_RADIATION_LEGGINGS.get(color))
+            .unlockedByTag(() -> CNTags.CNItemTags.CLOTH.tag)
+            .withCategory(RecipeCategory.COMBAT)
+            .viaShaped(i -> i
+                    .define('X', CNTags.forgeItemTag("ingots/lead"))
+                    .define('Y', ClothItem.Cloths.getByColor(color).get())
+                    .pattern("YXY")
+                    .pattern("X X")
+                    .pattern("Y Y")
+                    .showNotification(true)
+            )
+    )
+            ;
 
     GeneratedRecipe
         ANTI_RADIATION_BOOTS = create(CNItems.ANTI_RADIATION_BOOTS).unlockedByTag(() -> CNTags.CNItemTags.CLOTH.tag).withCategory(RecipeCategory.COMBAT)
@@ -387,7 +385,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
         }
 
         private ResourceLocation getRegistryName() {
-            return compatDatagenOutput == null ? RegisteredObjects.getKeyOrThrow(result.get()
+            return compatDatagenOutput == null ? CatnipServices.REGISTRIES.getKeyOrThrow(result.get()
                     .asItem()) : compatDatagenOutput;
         }
 
@@ -472,7 +470,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
                         consumer.accept(
                                 isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, null )
                                         : result);
-                    }, createSimpleLocation(RegisteredObjects.getKeyOrThrow(serializer)
+                    }, createSimpleLocation(CatnipServices.REGISTRIES.getKeyOrThrow(serializer)
                             .getPath()));
                 });
             }
