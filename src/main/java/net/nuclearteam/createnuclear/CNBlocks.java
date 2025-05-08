@@ -417,11 +417,11 @@ public class CNBlocks {
                     .tag(CNTags.forgeBlockTag("storage_blocks/steel"))
                     .register();
 
-    public static final BlockEntry<EventTriggerBlock> TEST_EVENT_TRIGGER_BLOCK = CreateNuclear.REGISTRATE.block("test_event_trigger_block", EventTriggerBlock::new)
+    /*public static final BlockEntry<EventTriggerBlock> TEST_EVENT_TRIGGER_BLOCK = CreateNuclear.REGISTRATE.block("test_event_trigger_block", EventTriggerBlock::new)
             .defaultBlockstate()
             .defaultLang()
             .simpleItem()
-            .register();
+            .register();*/
 
 
     public static void register() {
