@@ -1,7 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 /**
  * Abstract HUD overlay with a smooth fade-in/out (ease-in-out) effect.
@@ -11,7 +10,7 @@ public abstract class EasingHudOverlay implements HudOverlay {
     protected float fadeSpeed = 0.03f;
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         // Update progress based on the active state
         progress = isActive()
                 ? Math.min(1f, progress + fadeSpeed)

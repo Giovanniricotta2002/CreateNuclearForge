@@ -5,15 +5,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
 public class CNBiomeModifiers {
@@ -24,10 +24,10 @@ public class CNBiomeModifiers {
     ;
 
     private static ResourceKey<BiomeModifier> key(String name) {
-        return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, CreateNuclear.asResource(name));
+        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, CreateNuclear.asResource(name));
     }
 
-    public static void bootstrap(BootstapContext<BiomeModifier> ctx) {
+    public static void bootstrap(BootstrapContext<BiomeModifier> ctx) {
         HolderGetter<Biome> biomeLookup = ctx.lookup(Registries.BIOME);
         HolderSet<Biome> isOverworld = biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD);
 

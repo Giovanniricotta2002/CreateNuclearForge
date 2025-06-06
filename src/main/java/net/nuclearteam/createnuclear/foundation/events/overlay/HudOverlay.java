@@ -1,11 +1,9 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.nuclearteam.createnuclear.CreateNuclear;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
 /**
  * Base interface for all HUD overlays.
@@ -13,17 +11,17 @@ import net.nuclearteam.createnuclear.CreateNuclear;
 public interface HudOverlay {
     ResourceLocation getAfterOverlay();
 
-    String getOverlayId();
+    ResourceLocation getOverlayId();
 
     boolean isActive();
 
     int getPriority();
 
-    IGuiOverlay getOverlay();
+    LayeredDraw.Layer getOverlay();
 
-    void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height);
+    void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height);
 
-    default void register(RegisterGuiOverlaysEvent event) {
+    default void register(RegisterGuiLayersEvent event) {
         event.registerAbove(
                 getAfterOverlay(),
                 getOverlayId(),

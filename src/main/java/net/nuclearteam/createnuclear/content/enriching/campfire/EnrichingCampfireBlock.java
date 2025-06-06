@@ -66,7 +66,7 @@ public class EnrichingCampfireBlock extends BaseEntityBlock implements SimpleWat
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (state.getValue(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entity)) {
-            ((LivingEntity) entity).addEffect(new MobEffectInstance(CNEffects.RADIATION.get(), 100, 0));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(CNEffects.RADIATION.getDelegate(), 100, 0));
         }
         super.entityInside(state, level, pos, entity);
     }

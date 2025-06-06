@@ -1,14 +1,15 @@
 package net.nuclearteam.createnuclear.foundation.events;
 
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
+@EventBusSubscriber
 public class CommentEvents {
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent event) {
-        if (event.phase == Phase.START) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
+
     }
 }

@@ -1,6 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.events;
 
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.nuclearteam.createnuclear.foundation.events.overlay.EventTextOverlay;
 import net.nuclearteam.createnuclear.foundation.events.overlay.HelmetOverlay;
 import net.nuclearteam.createnuclear.foundation.events.overlay.HudOverlay;
@@ -16,7 +16,7 @@ public class HudRenderer {
             new EventTextOverlay()
     );
 
-    public void onHudRender(RegisterGuiOverlaysEvent event) {
+    public void onHudRender(RegisterGuiLayersEvent event) {
         overlays.stream()
                 .sorted(Comparator.comparingInt(HudOverlay::getPriority))
                 .forEach(overlay -> overlay.register(event));

@@ -12,7 +12,7 @@ import net.nuclearteam.createnuclear.CNItems;
 public class CNPonderIndex {
 
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         // Reactor
         HELPER.forComponents(CNBlocks.REACTOR_CONTROLLER)

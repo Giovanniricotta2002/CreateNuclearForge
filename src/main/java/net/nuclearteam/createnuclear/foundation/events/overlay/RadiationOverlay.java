@@ -2,11 +2,10 @@ package net.nuclearteam.createnuclear.foundation.events.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.nuclearteam.createnuclear.CNEffects;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.foundation.utility.RenderHelper;
@@ -29,18 +28,18 @@ public class RadiationOverlay extends EasingHudOverlay {
 
     @Override
     public ResourceLocation getAfterOverlay() {
-        return VanillaGuiOverlay.HELMET.id();
+        return VanillaGuiLayers.CAMERA_OVERLAYS;
     }
 
     @Override
-    public String getOverlayId() {
-        return "radiation_overlay";
+    public ResourceLocation getOverlayId() {
+        return ResourceLocation.parse("radiation_overlay");
     }
 
     @Override
     public boolean isActive() {
         LocalPlayer player = Minecraft.getInstance().player;
-        return player != null && player.hasEffect(CNEffects.RADIATION.get());
+        return player != null && player.hasEffect(CNEffects.RADIATION.getDelegate());
     }
 
     @Override
@@ -55,7 +54,7 @@ public class RadiationOverlay extends EasingHudOverlay {
     }
 
     @Override
-    public IGuiOverlay getOverlay() {
+    public LayeredDraw.Layer getOverlay() {
         return this::render;
     }
 }

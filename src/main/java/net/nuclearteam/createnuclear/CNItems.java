@@ -17,7 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem.DyeItemList;
@@ -34,9 +34,9 @@ public class CNItems {
             .item("yellowcake", Item::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                 .nutrition(20)
-                .saturationMod(0.3F)
-                .alwaysEat()
-                .effect((new MobEffectInstance(CNEffects.RADIATION.get(),600,2)) , 1.0F)
+                .saturationModifier(0.3F)
+                .alwaysEdible()
+                .effect((new MobEffectInstance(CNEffects.RADIATION.getDelegate(),600,2)) , 1.0F)
                 .build())
             )
             .register(),
@@ -164,9 +164,9 @@ public class CNItems {
             .register();
     });
 
-    public static final ItemEntry<ForgeSpawnEggItem> SPAWN_WOLF = registerSpawnEgg("wolf_irradiated_spawn_egg", CNEntityType.IRRADIATED_WOLF, 0x42452B,0x4C422B, "Irradiated Wolf Spawn Egg");
-    public static final ItemEntry<ForgeSpawnEggItem> SPAWN_CAT = registerSpawnEgg("cat_irradiated_spawn_egg", CNEntityType.IRRADIATED_CAT, 0x382C19, 0x742728, "Irradiated Cat Spawn Egg");
-    public static final ItemEntry<ForgeSpawnEggItem> SPAWN_CHICKEN = registerSpawnEgg("chicken_irradiated_spawn_egg", CNEntityType.IRRADIATED_CHICKEN, 0x6B9455, 0x95393C, "Irradiated Chicken Spawn Egg");
+    public static final ItemEntry<DeferredSpawnEggItem> SPAWN_WOLF = registerSpawnEgg("wolf_irradiated_spawn_egg", CNEntityType.IRRADIATED_WOLF, 0x42452B,0x4C422B, "Irradiated Wolf Spawn Egg");
+    public static final ItemEntry<DeferredSpawnEggItem> SPAWN_CAT = registerSpawnEgg("cat_irradiated_spawn_egg", CNEntityType.IRRADIATED_CAT, 0x382C19, 0x742728, "Irradiated Cat Spawn Egg");
+    public static final ItemEntry<DeferredSpawnEggItem> SPAWN_CHICKEN = registerSpawnEgg("chicken_irradiated_spawn_egg", CNEntityType.IRRADIATED_CHICKEN, 0x6B9455, 0x95393C, "Irradiated Chicken Spawn Egg");
 
     public static final ItemEntry<ReactorBluePrintItem> REACTOR_BLUEPRINT = CreateNuclear.REGISTRATE
         .item("reactor_blueprint_item", ReactorBluePrintItem::new)
@@ -176,11 +176,11 @@ public class CNItems {
         .register();
 
 
-    private static ItemEntry<ForgeSpawnEggItem> registerSpawnEgg(String name, Supplier<? extends EntityType<? extends Mob>> entity, int backgroundColor, int highlightColor, String nameItems) {
+    private static ItemEntry<DeferredSpawnEggItem> registerSpawnEgg(String name, Supplier<? extends EntityType<? extends Mob>> entity, int backgroundColor, int highlightColor, String nameItems) {
         return CreateNuclear.REGISTRATE
-            .item(name, p -> new ForgeSpawnEggItem(entity, backgroundColor, highlightColor, p))
+            .item(name, p -> new DeferredSpawnEggItem(entity, backgroundColor, highlightColor, p))
             .lang(nameItems)
-            .model((c, p) -> p.withExistingParent(c.getName(), new ResourceLocation("item/template_spawn_egg")))
+            .model((c, p) -> p.withExistingParent(c.getName(), ResourceLocation.withDefaultNamespace("item/template_spawn_egg")))
             .register();
 
     }

@@ -8,21 +8,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fluids.FluidInteractionRegistry;
-import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteStoneTypes;
 import org.joml.Vector3f;
 import net.nuclearteam.createnuclear.CNTags.CNFluidTags;
@@ -31,8 +28,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class CNFluids {
-    public static final FluidEntry<ForgeFlowingFluid.Flowing> URANIUM =
-        CreateNuclear.REGISTRATE.standardFluid("uranium", SolidRenderedPlaceableFluidtype.create(0x38FF08, () -> 1f / 32f))
+    public static final FluidEntry<BaseFlowingFluid.Flowing> URANIUM =
+        CreateNuclear.REGISTRATE.standardFluid("uranium", SolidRenderedPlaceableFluidity.create(0x38FF08, () -> 1f / 32f))
             .lang("Liquid Uranium")
             .tag(CNFluidTags.URANIUM.tag)
             .properties(p -> p.viscosity(2500)
@@ -47,7 +44,7 @@ public class CNFluids {
                 .slopeFindDistance(6)
                 .explosionResistance(100f)
             )
-            .source(ForgeFlowingFluid.Source::new)
+            .source(BaseFlowingFluid.Source::new)
             .bucket()
             .tag(CNTags.forgeItemTag("buckets/uranium"))
             .lang("Uranium Bucket")
@@ -56,12 +53,12 @@ public class CNFluids {
 
     public static void register() {}
 
-    public static void handleFluidEffect(LivingEvent.LivingTickEvent event) {
+    public static void handleFluidEffect(LivingEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.isAlive() && !(entity.isSpectator())) {
             if (entity.tickCount % 20 == 0) return;
             if (entity.isInFluidType(URANIUM.getType())) {
-                entity.addEffect(new MobEffectInstance(CNEffects.RADIATION.get(), 100, 0));
+                entity.addEffect(new MobEffectInstance(CNEffects.RADIATION.getDelegate(), 100, 0));
             }
         }
 
@@ -76,8 +73,8 @@ public class CNFluids {
 
         // List of source FluidTypes we want to register (lava and water)
         List<FluidType> sourceFluids = List.of(
-            ForgeMod.LAVA_TYPE.get(),
-            ForgeMod.WATER_TYPE.get()
+            NeoForgeMod.LAVA_TYPE.value(),
+            NeoForgeMod.WATER_TYPE.value()
         );
 
         // Loop over each source fluid and register the interaction
@@ -86,21 +83,21 @@ public class CNFluids {
         }
     }
 
-    private static class SolidRenderedPlaceableFluidtype extends AllFluids.TintedFluidType {
+    private static class SolidRenderedPlaceableFluidity extends AllFluids.TintedFluidType {
 
         private Vector3f fogColor;
         private Supplier<Float> fogDistance;
 
         public static FluidTypeFactory create(int fogColor, Supplier<Float> fogDistance) {
             return (p, s, f) -> {
-                SolidRenderedPlaceableFluidtype fluidtype = new SolidRenderedPlaceableFluidtype(p,s,f);
+                SolidRenderedPlaceableFluidity fluidtype = new SolidRenderedPlaceableFluidity(p,s,f);
                 fluidtype.fogColor = new Color(fogColor, false).asVectorF();
                 fluidtype.fogDistance = fogDistance;
                 return fluidtype;
             };
         }
 
-        private SolidRenderedPlaceableFluidtype(Properties properties, ResourceLocation stillTecture, ResourceLocation flowingTexture) {
+        private SolidRenderedPlaceableFluidity(Properties properties, ResourceLocation stillTecture, ResourceLocation flowingTexture) {
             super(properties, stillTecture, flowingTexture);
         }
 

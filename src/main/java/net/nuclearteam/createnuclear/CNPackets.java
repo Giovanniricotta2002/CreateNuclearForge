@@ -1,95 +1,45 @@
 package net.nuclearteam.createnuclear;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
+import net.createmod.catnip.net.base.BasePacketPayload;
+import net.createmod.catnip.net.base.CatnipPacketRegistry;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import static net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
-
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.network.NetworkEvent.Context;
 import net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintItemPacket;
 import net.nuclearteam.createnuclear.content.multiblock.controller.EventTriggerPacket;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Locale;
 
-public enum CNPackets {
+public enum CNPackets implements BasePacketPayload.PacketTypeProvider {
     CONFIGURE_REACTOR_PATTERN(ReactorBluePrintItemPacket.class, ReactorBluePrintItemPacket::new, PLAY_TO_SERVER),
 
     // To client
     TRIGGER_EVENT_TEXT_OVERLAY(EventTriggerPacket.class, EventTriggerPacket::new, PLAY_TO_CLIENT),
     ;
-    public static final ResourceLocation CHANNEL_NAME = CreateNuclear.asResource("main");
-    public static final int NETWORK_VERSION = 0;
-    public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
-    private static SimpleChannel channel;
 
-    private final PacketType<?> packetType;
+    private final CatnipPacketRegistry.PacketType<?> type;
 
-    <T extends SimplePacketBase> CNPackets(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-        packetType = new PacketType<>(type, factory, direction);
-    }
-
-    public static void registerPackets() {
-        channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-                .serverAcceptedVersions(NETWORK_VERSION_STR::equals)
-                .clientAcceptedVersions(NETWORK_VERSION_STR::equals)
-                .networkProtocolVersion(() -> NETWORK_VERSION_STR)
-                .simpleChannel();
-
-        for (CNPackets packet : values()) {
-            packet.packetType.register();
-        }
-    }
-
-    public static SimpleChannel getChannel() {
-        return channel;
-    }
-
-    public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-        getChannel().send(
-                PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
-                message
+    <T extends BasePacketPayload> CNPackets(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
+        String name = this.name().toLowerCase(Locale.ROOT);
+        this.type = new CatnipPacketRegistry.PacketType<>(
+                new CustomPacketPayload.Type<>(CreateNuclear.asResource(name)),
+                clazz, codec
         );
     }
 
-    private static class PacketType<T extends SimplePacketBase> {
-        private static int index = 0;
-
-        private final BiConsumer<T, FriendlyByteBuf> encoder;
-        private final Function<FriendlyByteBuf, T> decoder;
-        private final BiConsumer<T, Supplier<Context>> handler;
-        private final Class<T> type;
-        private final NetworkDirection direction;
-
-        private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-            encoder = T::write;
-            decoder = factory;
-            handler = (packet, contextSupplier) -> {
-                Context context = contextSupplier.get();
-                if (packet.handle(context)) {
-                    context.setPacketHandled(true);
-                }
-            };
-
-            this.type = type;
-            this.direction = direction;
-        }
-
-        private void register() {
-            getChannel().messageBuilder(type, index++, direction)
-                    .encoder(encoder)
-                    .decoder(decoder)
-                    .consumerNetworkThread(handler)
-                    .add();
-        }
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends CustomPacketPayload> CustomPacketPayload.Type<T> getType() {
+        return (CustomPacketPayload.Type<T>) this.type.type();
     }
+
+    public static void register() {
+        CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(CreateNuclear.ID, 1);
+        for (CNPackets packet : CNPackets.values()) {
+            packetRegistry.registerPacket(packet.type);
+        }
+        packetRegistry.registerAllPackets();
+    }
+
 }

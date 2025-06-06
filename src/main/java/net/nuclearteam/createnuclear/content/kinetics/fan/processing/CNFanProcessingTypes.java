@@ -113,7 +113,7 @@ public class CNFanProcessingTypes {
         @Override
         public void affectEntity(Entity entity, Level level) {
             if (entity instanceof LivingEntity livingEntity) {
-                livingEntity.addEffect(new MobEffectInstance(CNEffects.RADIATION.get(), 10, 0, true, true));
+                livingEntity.addEffect(new MobEffectInstance(CNEffects.RADIATION.getDelegate(), 10, 0, true, true));
             }
         }
     }

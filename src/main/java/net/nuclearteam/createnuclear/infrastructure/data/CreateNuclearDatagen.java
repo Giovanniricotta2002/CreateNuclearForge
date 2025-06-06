@@ -8,8 +8,8 @@ import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.foundation.advancement.CNAdvancement;
 import net.nuclearteam.createnuclear.foundation.data.recipe.CNProcessingRecipeGen;
@@ -21,24 +21,27 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class CreateNuclearDatagen {
+    public static void gatherDataHighPriority(GatherDataEvent event) {
+        if (event.getMods().contains(CreateNuclear.MOD_ID))
+            addExtraRegistrateData();
+    }
+
     public static void gatherData(GatherDataEvent event) {
-        addExtraRegistrateData();
+        if (!event.getMods().contains(CreateNuclear.MOD_ID))
+            return;
+
 
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-
         GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
         lookupProvider = generatedEntriesProvider.getRegistryProvider();
-        generator.addProvider(event.includeClient(), generatedEntriesProvider);
-        generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output));
-        generator.addProvider(event.includeClient(), new CNAdvancement(output));
+        generator.addProvider(event.includeServer(), generatedEntriesProvider);
 
-        /*if (event.includeClient()) {
-
-        }*/
+        generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeClient(), new CNAdvancement(output, lookupProvider, existingFileHelper));
 
         if (event.includeServer()) {
             CNProcessingRecipeGen.registerAll(generator, output);

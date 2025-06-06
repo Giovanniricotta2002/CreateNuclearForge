@@ -2,13 +2,12 @@ package net.nuclearteam.createnuclear.foundation.events.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.nuclearteam.createnuclear.CNTags.CNItemTags;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.foundation.utility.RenderHelper;
@@ -29,12 +28,12 @@ public class HelmetOverlay  implements HudOverlay {
 
     @Override
     public ResourceLocation getAfterOverlay() {
-        return VanillaGuiOverlay.HELMET.id();
+        return VanillaGuiLayers.CAMERA_OVERLAYS;
     }
 
     @Override
-    public String getOverlayId() {
-        return "helmet_overlay";
+    public ResourceLocation getOverlayId() {
+        return ResourceLocation.parse("helmet_overlay");
     }
 
     @Override
@@ -46,7 +45,7 @@ public class HelmetOverlay  implements HudOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         if (!isActive()) return;
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -69,7 +68,7 @@ public class HelmetOverlay  implements HudOverlay {
         // Render helmet overlay texture
         RenderHelper.renderFirstPersonOverlay(graphics, HELMET_TEXTURES[index], 1f, 1f);
         // Render the hotbar behind the helmet overlay
-        Minecraft.getInstance().gui.renderHotbar(12f, graphics);
+        //Minecraft.getInstance().gui.renderItemHotbar(12f, graphics);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class HelmetOverlay  implements HudOverlay {
     }
 
     @Override
-    public IGuiOverlay getOverlay() {
+    public LayeredDraw.Layer getOverlay() {
         return this::render;
     }
 }

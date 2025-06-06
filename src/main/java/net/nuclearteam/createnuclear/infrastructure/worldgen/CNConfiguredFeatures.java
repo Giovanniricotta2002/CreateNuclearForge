@@ -4,7 +4,7 @@ import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.LayerPattern;
 import com.simibubi.create.infrastructure.worldgen.LayeredOreConfiguration;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -30,7 +30,7 @@ public class CNConfiguredFeatures {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, CreateNuclear.asResource(name));
     }
 
-    public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> ctx) {
+    public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> ctx) {
         RuleTest stoneOreReplaceable = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
         RuleTest deepslateOreReplaceables = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 

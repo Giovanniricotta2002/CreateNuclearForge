@@ -3,7 +3,7 @@ package net.nuclearteam.createnuclear;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.nuclearteam.createnuclear.content.contraptions.irradiated.CNModelLayers;
 import net.nuclearteam.createnuclear.content.contraptions.irradiated.cat.IrradiatedCat;
 import net.nuclearteam.createnuclear.CNTags.CNEntityTags;

@@ -3,12 +3,14 @@ package net.nuclearteam.createnuclear.foundation.events.overlay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
 /**
@@ -27,12 +29,12 @@ public class EventTextOverlay implements HudOverlay {
 
     @Override
     public ResourceLocation getAfterOverlay() {
-        return VanillaGuiOverlay.HELMET.id();
+        return VanillaGuiLayers.CAMERA_OVERLAYS;
     }
 
     @Override
-    public String getOverlayId() {
-        return "event_text_overlay";
+    public ResourceLocation getOverlayId() {
+        return ResourceLocation.parse("event_text_overlay");
     }
 
     @Override
@@ -41,7 +43,7 @@ public class EventTextOverlay implements HudOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         if (!isActive()) return;
         if (timer-- <= 0) return;
         CreateNuclear.LOGGER.warn("hum EventTextOverlay: {}", timer);
@@ -59,7 +61,7 @@ public class EventTextOverlay implements HudOverlay {
     }
 
     @Override
-    public IGuiOverlay getOverlay() {
+    public LayeredDraw.Layer getOverlay() {
         return this::render;
     }
 }
