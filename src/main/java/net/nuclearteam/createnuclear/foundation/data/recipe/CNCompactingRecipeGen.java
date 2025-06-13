@@ -1,14 +1,16 @@
 package net.nuclearteam.createnuclear.foundation.data.recipe;
 
-import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.nuclearteam.createnuclear.CNFluids;
 import net.nuclearteam.createnuclear.CNItems;
 import net.nuclearteam.createnuclear.CNTags;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
-public class CNCompactingRecipeGen extends CNProcessingRecipeGen {
+import java.util.concurrent.CompletableFuture;
+
+public class CNCompactingRecipeGen extends CompactingRecipeGen {
     GeneratedRecipe
         YELLOWCAKE = create(CreateNuclear.asResource("uranium_fluid_to_yellowcake"), b -> b
             .require(CNTags.CNFluidTags.URANIUM.tag, 100)
@@ -16,13 +18,9 @@ public class CNCompactingRecipeGen extends CNProcessingRecipeGen {
         );
 
 
-    public CNCompactingRecipeGen(PackOutput output) {
-        super(output);
+    public CNCompactingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, CreateNuclear.MOD_ID);
     }
 
-    @Override
-    protected AllRecipeTypes getRecipeType() {
-        return AllRecipeTypes.COMPACTING;
-    }
 
 }

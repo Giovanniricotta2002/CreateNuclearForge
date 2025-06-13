@@ -1,6 +1,6 @@
 package net.nuclearteam.createnuclear.content.equipment.armor;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -244,7 +244,7 @@ public class AntiRadiationArmorItem {
     public static class DyeRecipeArmorList implements Iterable<GeneratedRecipe> {
         private static final int COLOR_AMOUNT = DyeColor.values().length;
 
-        protected final GeneratedRecipe[] recipes = new GeneratedRecipe[getColorCount()];
+        protected final GeneratedRecipe[] recipes = new GeneratedRecipe[][getColorCount()];
 
         public DyeRecipeArmorList(Function<@NotNull DyeColor, GeneratedRecipe> filler) {
             for (DyeColor color : DyeColor.values()) {

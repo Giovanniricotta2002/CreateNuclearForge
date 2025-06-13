@@ -16,7 +16,7 @@ public class CNClientEvent {
     @SubscribeEvent
     public static void onRegisterGui(RegisterGuiLayersEvent event) {
         HUD_RENDERER.onHudRender(event);
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, "irradiated_vision", IrradiatedOverlayRendererVision::getOverlay);
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, CreateNuclear.asResource("irradiated_vision"), IrradiatedOverlayRendererVision::renderOverlay);
     }
 
 

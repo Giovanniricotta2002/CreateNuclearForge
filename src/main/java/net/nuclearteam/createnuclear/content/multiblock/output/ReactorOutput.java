@@ -4,12 +4,14 @@ package net.nuclearteam.createnuclear.content.multiblock.output;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,10 +34,12 @@ import net.nuclearteam.createnuclear.content.multiblock.controller.ReactorContro
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
 
-
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class ReactorOutput extends DirectionalKineticBlock implements IWrenchable, IBE<ReactorOutputEntity> {
 
     //public static final IntegerProperty SPEED = IntegerProperty.create("speed", 0, 256);
@@ -53,9 +57,9 @@ public class ReactorOutput extends DirectionalKineticBlock implements IWrenchabl
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         else {
             ReactorControllerBlock controller = FindController(pos, level, level.players(), false);
             if (controller != null){
@@ -68,7 +72,7 @@ public class ReactorOutput extends DirectionalKineticBlock implements IWrenchabl
                     else control.setDir(0, level, pos);
                 }
             }
-            return InteractionResult.CONSUME;
+            return ItemInteractionResult.CONSUME;
         }
     }
 
@@ -123,11 +127,6 @@ public class ReactorOutput extends DirectionalKineticBlock implements IWrenchabl
     @Override
     public boolean hideStressImpact() {
         return true;
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
-        return false;
     }
 
     @Override

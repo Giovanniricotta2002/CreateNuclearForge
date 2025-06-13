@@ -1,6 +1,6 @@
 package net.nuclearteam.createnuclear.content.equipment.cloth;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;

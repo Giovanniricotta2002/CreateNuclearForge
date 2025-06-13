@@ -4,7 +4,8 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -134,13 +135,13 @@ public class CNAdvancement implements DataProvider {
     FULL_ANTI_RADIATION_ARMOR = create("full_anti_radiation_armor", b -> b.icon(CNItems.ANTI_RADIATION_CHESTPLATES.get(DyeColor.WHITE))
             .title("Fully Protected")
             .description("Wear a full set of anti-radiation armor to fully protect yourself from radiation")
-            .externalTrigger(
+            /*.externalTrigger(
                     InventoryChangeTrigger.TriggerInstance.hasItems(
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_HELMET_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_CHESTPLATE_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_LEGGINGS_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_BOOTS_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY)
-                    ))
+                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_HELMET_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_CHESTPLATE_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_LEGGINGS_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_BOOTS_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, null)
+                    ))*/
             .after(ANTI_RADIATION_ARMOR)),
 
     DYE_ANTI_RADIATION_ARMOR = create("dye_anti_radiation_armor", b -> b.icon(CNItems.ANTI_RADIATION_HELMETS.get(DyeColor.RED))
@@ -205,46 +206,57 @@ public class CNAdvancement implements DataProvider {
             .title("Core of Power")
             .description("Craft the reactor core to harness the full energy of your nuclear reactor")
             .after(REACTOR_CASING)
-            .whenIconCollected());
+            .whenIconCollected()),
+
+    END = null;
 
     private final PackOutput output;
+    private final CompletableFuture<HolderLookup.Provider> registries;
+
 
     private static CreateNuclearAdvancement create(String id, UnaryOperator<Builder> b) {
         return new CreateNuclearAdvancement(id, b);
     }
 
-    public CNAdvancement(PackOutput output) {
+    public CNAdvancement(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         this.output = output;
+        this.registries = registries;
     }
 
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
-        PackOutput.PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
-        List<CompletableFuture<?>> futures = new ArrayList<>();
+        return this.registries.thenCompose(provider -> {
+            PackOutput.PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancement");
+            List<CompletableFuture<?>> futures = new ArrayList<>();
 
-        Set<ResourceLocation> set = Sets.newHashSet();
-        Consumer<Advancement> consumer = (advancement) -> {
-            ResourceLocation id = advancement.getId();
-            if (!set.add(id))
-                throw new IllegalStateException("Duplicate advancement " + id);
-            Path path = pathProvider.json(id);
-            futures.add(DataProvider.saveStable(cache, advancement.deconstruct()
-                    .serializeToJson(), path));
-        };
+            Set<ResourceLocation> set = Sets.newHashSet();
+            Consumer<AdvancementHolder> consumer = (advancement) -> {
+                ResourceLocation id = advancement.id();
+                if (!set.add(id))
+                    throw new IllegalStateException("Duplicate advancement " + id);
+                Path path = pathProvider.json(id);
+                LOGGER.info("Saving advancement {}", id);
+                futures.add(DataProvider.saveStable(cache, provider, Advancement.CODEC, advancement.value(), path));
+            };
 
-        for (CreateNuclearAdvancement advancement : ENTRIES)
-            advancement.save(consumer);
+            for (CreateNuclearAdvancement advancement : ENTRIES)
+                advancement.save(consumer, provider);
 
-        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+            return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+        });
     }
 
     @Override
     public String getName() {
-        return "Create Nuclear Advancements";
+        return "Create's Advancements";
     }
 
     public static void provideLang(BiConsumer<String, String> consumer) {
         for (CreateNuclearAdvancement advancement : ENTRIES)
             advancement.provideLang(consumer);
     }
+
+    public static void register() {
+    }
+
 }

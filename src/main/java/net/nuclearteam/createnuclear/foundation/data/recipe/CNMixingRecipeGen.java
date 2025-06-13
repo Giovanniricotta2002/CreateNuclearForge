@@ -1,21 +1,17 @@
 package net.nuclearteam.createnuclear.foundation.data.recipe;
 
-import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
+import com.simibubi.create.api.data.recipe.MixingRecipeGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import net.nuclearteam.createnuclear.CNFluids;
 import net.nuclearteam.createnuclear.CNItems;
 import net.nuclearteam.createnuclear.CNTags;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.concurrent.CompletableFuture;
 
-public class CNMixingRecipeGen extends CNProcessingRecipeGen {
+public class CNMixingRecipeGen extends MixingRecipeGen {
 
     GeneratedRecipe
         STEEL = create("steel", b -> b
@@ -30,31 +26,9 @@ public class CNMixingRecipeGen extends CNProcessingRecipeGen {
         )
     ;
 
-    <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
-        return create(CreateNuclear.asResource(name), transform);
+
+    public CNMixingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, CreateNuclear.MOD_ID);
     }
 
-    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(ResourceLocation name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
-        return createWithDeferredId(() -> name, transform);
-    }
-
-    protected <T extends ProcessingRecipe<?>> GeneratedRecipe createWithDeferredId(Supplier<ResourceLocation> name,
-                                                                                   UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
-        ProcessingRecipeSerializer<T> serializer = getSerializer();
-        GeneratedRecipe generatedRecipe =
-                c -> transform.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(), name.get()))
-                        .build(c);
-        all.add(generatedRecipe);
-        return generatedRecipe;
-    }
-
-
-    public CNMixingRecipeGen(PackOutput generator) {
-        super(generator);
-    }
-
-    @Override
-    protected AllRecipeTypes getRecipeType() {
-        return AllRecipeTypes.MIXING;
-    }
 }

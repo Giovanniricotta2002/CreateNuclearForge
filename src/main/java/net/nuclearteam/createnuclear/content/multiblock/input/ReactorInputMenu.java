@@ -3,7 +3,9 @@ package net.nuclearteam.createnuclear.content.multiblock.input;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -11,13 +13,13 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import net.nuclearteam.createnuclear.CNMenus;
 
 public class ReactorInputMenu extends MenuBase<ReactorInputEntity> {
 
 
-    public ReactorInputMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+    public ReactorInputMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
     }
 
@@ -39,12 +41,16 @@ public class ReactorInputMenu extends MenuBase<ReactorInputEntity> {
         return ItemStack.EMPTY;
     }
 
+
+
     @Override
-    protected ReactorInputEntity createOnClient(FriendlyByteBuf extraData) {
+    protected ReactorInputEntity createOnClient(RegistryFriendlyByteBuf extraData) {
         ClientLevel world = Minecraft.getInstance().level;
+        CompoundTag readNbt = extraData.readNbt();
+
         BlockEntity entity = world.getBlockEntity(extraData.readBlockPos());
         if (entity instanceof ReactorInputEntity reactorInputEntity) {
-            reactorInputEntity.readClient(extraData.readNbt());
+            reactorInputEntity.readClient(readNbt, extraData.registryAccess());
             return reactorInputEntity;
         }
         return null;
@@ -57,7 +63,6 @@ public class ReactorInputMenu extends MenuBase<ReactorInputEntity> {
 
     @Override
     protected void addSlots() {
-
         // player Slots
         for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
             this.addSlot(new Slot(player.getInventory(), hotbarSlot, -31 + hotbarSlot * 18, 155));

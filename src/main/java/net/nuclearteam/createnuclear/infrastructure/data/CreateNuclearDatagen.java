@@ -2,6 +2,8 @@ package net.nuclearteam.createnuclear.infrastructure.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.simibubi.create.foundation.data.recipe.CreateMechanicalCraftingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import net.createmod.ponder.foundation.PonderIndex;
@@ -12,7 +14,9 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.foundation.advancement.CNAdvancement;
-import net.nuclearteam.createnuclear.foundation.data.recipe.CNProcessingRecipeGen;
+import net.nuclearteam.createnuclear.foundation.data.recipe.CNMechanicalCraftingRecipeGen;
+import net.nuclearteam.createnuclear.foundation.data.recipe.CNRecipeProvider;
+import net.nuclearteam.createnuclear.foundation.data.recipe.CNShapelessRecipeGen;
 import net.nuclearteam.createnuclear.foundation.data.recipe.CNStandardRecipeGen;
 import net.nuclearteam.createnuclear.foundation.ponder.CreateNuclearPonderPlugin;
 
@@ -36,15 +40,20 @@ public class CreateNuclearDatagen {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
+
         GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
         lookupProvider = generatedEntriesProvider.getRegistryProvider();
         generator.addProvider(event.includeServer(), generatedEntriesProvider);
 
-        generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output, lookupProvider, existingFileHelper));
-        generator.addProvider(event.includeClient(), new CNAdvancement(output, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new CNMechanicalCraftingRecipeGen(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new CNShapelessRecipeGen(output, lookupProvider));
+
+
+        generator.addProvider(event.includeClient(), new CNAdvancement(output, lookupProvider));
 
         if (event.includeServer()) {
-            CNProcessingRecipeGen.registerAll(generator, output);
+            CNRecipeProvider.registerAllProcessing(generator, output, lookupProvider);
         }
     }
 

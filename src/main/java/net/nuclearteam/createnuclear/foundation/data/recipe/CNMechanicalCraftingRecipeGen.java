@@ -3,9 +3,12 @@ package net.nuclearteam.createnuclear.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeBuilder;
+import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -14,10 +17,11 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.nuclearteam.createnuclear.*;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class CNMechanicalCraftingRecipeGen extends CNProcessingRecipeGen {
+public class CNMechanicalCraftingRecipeGen extends MechanicalCraftingRecipeGen {
 
     GeneratedRecipe
         GRAPHITE_ROD = create(CNItems.GRAPHITE_ROD::get)
@@ -94,50 +98,8 @@ public class CNMechanicalCraftingRecipeGen extends CNProcessingRecipeGen {
             .patternLine("CCCCC")
     );
 
-    GeneratedRecipeBuilder create(Supplier<ItemLike> result) {
-        return new GeneratedRecipeBuilder(result);
-    }
 
-    class GeneratedRecipeBuilder {
-
-        private String suffix;
-        private Supplier<ItemLike> result;
-        private int amount;
-
-        public GeneratedRecipeBuilder(Supplier<ItemLike> result) {
-            this.suffix = "";
-            this.result = result;
-            this.amount = 1;
-        }
-
-        GeneratedRecipeBuilder returns(int amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        GeneratedRecipeBuilder withSuffix(String suffix) {
-            this.suffix = suffix;
-            return this;
-        }
-
-        GeneratedRecipe recipe(UnaryOperator<MechanicalCraftingRecipeBuilder> builder) {
-            return register(consumer -> {
-                MechanicalCraftingRecipeBuilder b =
-                        builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-                ResourceLocation location = CreateNuclear.asResource("mechanical_crafting/" + CatnipServices.REGISTRIES.getKeyOrThrow(result.get()
-                                .asItem())
-                        .getPath() + suffix);
-                b.build(consumer, location);
-            });
-        }
-    }
-
-    public CNMechanicalCraftingRecipeGen(PackOutput output) {
-        super(output);
-    }
-
-    @Override
-    protected IRecipeTypeInfo getRecipeType() {
-        return AllRecipeTypes.MECHANICAL_CRAFTING;
+    public CNMechanicalCraftingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, CreateNuclear.MOD_ID);
     }
 }

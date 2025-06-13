@@ -2,7 +2,7 @@ package net.nuclearteam.createnuclear.content.multiblock.input;
 
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.nuclearteam.createnuclear.CNItems;
 import org.jetbrains.annotations.NotNull;
 

@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import com.simibubi.create.infrastructure.data.CreateDatagen;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -84,6 +85,7 @@ public class CreateNuclear {
         modEventBus.addListener(EventPriority.LOWEST, CreateNuclearDatagen::gatherData);
         forgeEventBus.addListener(CNFluids::handleFluidEffect);
 
+        modEventBus.addListener(EventPriority.HIGHEST, CreateNuclearDatagen::gatherDataHighPriority);
 
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateNuclearClient.onCtorClient(modEventBus, forgeEventBus));
     }

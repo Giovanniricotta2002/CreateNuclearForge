@@ -7,8 +7,12 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.data.recipe.CompatMetals;
+import com.simibubi.create.foundation.data.recipe.Mods;
+import com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -39,7 +43,6 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
-import net.neoforged.neoforge.mixins.MappedRegistryAccessor;
 import net.nuclearteam.createnuclear.CNBlocks;
 import net.nuclearteam.createnuclear.CNItems;
 import net.nuclearteam.createnuclear.CNTags;
@@ -47,8 +50,8 @@ import net.nuclearteam.createnuclear.CNTags.CNItemTags;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +62,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
-public class CNStandardRecipeGen extends CreateRecipeProvider {
+public class CNStandardRecipeGen extends BaseRecipeProvider {
     final List<GeneratedRecipe> all = new ArrayList<>();
 
     private final Marker CRAFTING = enterFolder("crafting");
@@ -167,7 +170,6 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
     AntiRadiationArmorItem.DyeRecipeArmorList
         ANTI_RADIATION_HELMET = new AntiRadiationArmorItem.DyeRecipeArmorList(color -> create(CNItems.ANTI_RADIATION_HELMETS.get(color))
             .unlockedByTag(() -> CNItemTags.CLOTH.tag)
-            .withCategory(RecipeCategory.COMBAT)
             .viaShaped(i -> i
                 .define('X', CNTags.forgeItemTag("ingots/lead"))
                 .define('Y', ClothItem.Cloths.getByColor(color).get())
@@ -181,7 +183,6 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
 
         ANTI_RADIATION_CHESTPLATES = new AntiRadiationArmorItem.DyeRecipeArmorList(color -> create(CNItems.ANTI_RADIATION_CHESTPLATES.get(color))
             .unlockedByTag(() -> CNItemTags.CLOTH.tag)
-            .withCategory(RecipeCategory.COMBAT)
             .viaShaped(i -> i
             .define('X', CNTags.forgeItemTag("ingots/lead"))
             .define('Y', ClothItem.Cloths.getByColor(color).get())
@@ -195,7 +196,6 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
 
         ANTI_RADIATION_LEGGINGS = new AntiRadiationArmorItem.DyeRecipeArmorList(color -> create(CNItems.ANTI_RADIATION_LEGGINGS.get(color))
             .unlockedByTag(() -> CNItemTags.CLOTH.tag)
-            .withCategory(RecipeCategory.COMBAT)
             .viaShaped(i -> i
                 .define('X', CNTags.forgeItemTag("ingots/lead"))
                 .define('Y', ClothItem.Cloths.getByColor(color).get())
@@ -208,7 +208,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
     ;
 
     GeneratedRecipe
-        ANTI_RADIATION_BOOTS = create(CNItems.ANTI_RADIATION_BOOTS).unlockedByTag(() -> CNItemTags.CLOTH.tag).withCategory(RecipeCategory.COMBAT)
+        ANTI_RADIATION_BOOTS = create(CNItems.ANTI_RADIATION_BOOTS).unlockedByTag(() -> CNItemTags.CLOTH.tag)
             .viaShaped(b -> b
                 .define('X', CNTags.forgeItemTag("ingots/lead"))
                 .define('Y', ClothItem.Cloths.WHITE_CLOTH.getItem())
@@ -252,7 +252,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
 
     GeneratedRecipe createSpecial(Function<CraftingBookCategory, Recipe<?>> builder, String recipeType,
                                   String path) {
-        ResourceLocation location = CreateNuclear.asResource(recipeType + "/" + currentFolder + "/" + path);
+        ResourceLocation location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
         return register(consumer -> {
             SpecialRecipeBuilder b = SpecialRecipeBuilder.special(builder);
             b.save(consumer, location.toString());
@@ -264,6 +264,20 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
                 .viaCooking(ingredient)
                 .rewardXP(.1f)
                 .inBlastFurnace();
+    }
+
+    GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
+        for (Mods mod : metal.getMods()) {
+            String metalName = metal.getName(mod);
+            ResourceLocation ingot = mod.ingotOf(metalName);
+            String modId = mod.getId();
+            create(ingot).withSuffix("_compat_" + modId)
+                    .whenModLoaded(modId)
+                    .viaCooking(ingredient::get)
+                    .rewardXP(.1f)
+                    .inBlastFurnace();
+        }
+        return null;
     }
 
     GeneratedRecipe recycleGlass(BlockEntry<? extends Block> ingredient) {
@@ -280,6 +294,22 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
                 .viaCooking(ingredient::get)
                 .forDuration(50)
                 .inFurnace();
+    }
+
+    GeneratedRecipe blastFurnaceRecipe(Supplier<? extends ItemLike> result, Supplier<? extends ItemLike> ingredient, String suffix, int count) {
+        return create(result::get).withSuffix(suffix)
+                .returns(count)
+                .viaCooking(ingredient)
+                .rewardXP(.1f)
+                .inBlastFurnace();
+    }
+
+    GeneratedRecipe blastFurnaceRecipeTags(Supplier<? extends ItemLike> result, Supplier<TagKey<Item>> ingredient, String suffix, int count) {
+        return create(result::get).withSuffix(suffix)
+            .returns(count)
+            .viaCookingTag(ingredient)
+            .rewardXP(.1f)
+            .inBlastFurnace();
     }
 
     GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends ItemLike, ? extends ItemLike>> variants,
@@ -327,7 +357,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput output) {
         all.forEach(c -> c.register(output));
-        CreateNuclear.LOGGER.info("{} registered {} recipe{}", getName(), all.size(), all.size() == 1 ? "" : "s");
+        Create.LOGGER.info("{} registered {} recipe{}", getName(), all.size(), all.size() == 1 ? "" : "s");
     }
 
     protected GeneratedRecipe register(GeneratedRecipe recipe) {
@@ -337,7 +367,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
 
     class GeneratedRecipeBuilder {
 
-        private String path;
+        private final String path;
         private String suffix;
         private Supplier<? extends ItemLike> result;
         private ResourceLocation compatDatagenOutput;
@@ -382,12 +412,12 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
             return this;
         }
 
-        GeneratedRecipeBuilder whenModLoaded(String modid) {
-            return withCondition(new ModLoadedCondition(modid));
+        GeneratedRecipeBuilder whenModLoaded(String mod) {
+            return withCondition(new ModLoadedCondition(mod));
         }
 
-        GeneratedRecipeBuilder whenModMissing(String modid) {
-            return withCondition(new NotCondition(new ModLoadedCondition(modid)));
+        GeneratedRecipeBuilder whenModMissing(String mod) {
+            return withCondition(new NotCondition(new ModLoadedCondition(mod)));
         }
 
         GeneratedRecipeBuilder withCondition(ICondition condition) {
@@ -438,11 +468,11 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
         }
 
         private ResourceLocation createSimpleLocation(String recipeType) {
-            return CreateNuclear.asResource(recipeType + "/" + getRegistryName().getPath() + suffix);
+            return Create.asResource(recipeType + "/" + getRegistryName().getPath() + suffix);
         }
 
         private ResourceLocation createLocation(String recipeType) {
-            return CreateNuclear.asResource(recipeType + "/" + path + "/" + getRegistryName().getPath() + suffix);
+            return Create.asResource(recipeType + "/" + path + "/" + getRegistryName().getPath() + suffix);
         }
 
         private ResourceLocation getRegistryName() {
@@ -450,16 +480,16 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
                     .asItem()) : compatDatagenOutput;
         }
 
-        GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends ItemLike> item) {
+        GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends ItemLike> item) {
             return unlockedBy(item).viaCookingIngredient(() -> Ingredient.of(item.get()));
         }
 
-        GeneratedCookingRecipeBuilder viaCookingTag(Supplier<TagKey<Item>> tag) {
+        GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder viaCookingTag(Supplier<TagKey<Item>> tag) {
             return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
         }
 
-        GeneratedCookingRecipeBuilder viaCookingIngredient(Supplier<Ingredient> ingredient) {
-            return new GeneratedCookingRecipeBuilder(ingredient);
+        GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder viaCookingIngredient(Supplier<Ingredient> ingredient) {
+            return new GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder(ingredient);
         }
 
         class GeneratedCookingRecipeBuilder {
@@ -474,12 +504,12 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
                 exp = 0;
             }
 
-            GeneratedCookingRecipeBuilder forDuration(int duration) {
+            GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder forDuration(int duration) {
                 cookingTime = duration;
                 return this;
             }
 
-            GeneratedCookingRecipeBuilder rewardXP(float xp) {
+            GeneratedRecipeBuilder.GeneratedCookingRecipeBuilder rewardXP(float xp) {
                 exp = xp;
                 return this;
             }
@@ -546,7 +576,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
     @MethodsReturnNonnullByDefault
     private static class ModdedCookingRecipeOutputShim implements Recipe<RecipeInput> {
 
-        private static final Map<RecipeType<?>, Serializer> serializers = new ConcurrentHashMap<>();
+        private static final Map<RecipeType<?>, ModdedCookingRecipeOutputShim.Serializer> serializers = new ConcurrentHashMap<>();
 
         private final Recipe<?> wrapped;
         private final ResourceLocation overrideID;
@@ -580,7 +610,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
         public RecipeSerializer<?> getSerializer() {
             return serializers.computeIfAbsent(
                     getType(),
-                    t -> Serializer.create(wrapped)
+                    t -> ModdedCookingRecipeOutputShim.Serializer.create(wrapped)
             );
         }
 
@@ -590,18 +620,18 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
         }
 
         private record Serializer(MapCodec<Recipe<?>> wrappedCodec) implements RecipeSerializer<ModdedCookingRecipeOutputShim> {
-            private static Serializer create(Recipe<?> wrapped) {
+            private static ModdedCookingRecipeOutputShim.Serializer create(Recipe<?> wrapped) {
                 RecipeSerializer<?> wrappedSerializer = wrapped.getSerializer();
                 @SuppressWarnings("unchecked")
-                Serializer serializer = new Serializer((MapCodec<Recipe<?>>) wrappedSerializer.codec());
+                ModdedCookingRecipeOutputShim.Serializer serializer = new ModdedCookingRecipeOutputShim.Serializer((MapCodec<Recipe<?>>) wrappedSerializer.codec());
 
                 // Need to do some registry injection to get the Recipe/Registry#byNameCodec to encode the right type for this
                 // getResourceKey and getId
                 // byValue and toId
                 // Holder.Reference: key
-                if (BuiltInRegistries.RECIPE_SERIALIZER instanceof MappedRegistryAccessor<?> mra) {
+                if (BuiltInRegistries.RECIPE_SERIALIZER instanceof com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor<?> mra) {
                     @SuppressWarnings("unchecked")
-                    MappedRegistryAccessor<RecipeSerializer<?>> mra$ = (MappedRegistryAccessor<RecipeSerializer<?>>) mra;
+                    com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor<RecipeSerializer<?>> mra$ = (MappedRegistryAccessor<RecipeSerializer<?>>) mra;
 
                     int wrappedId = mra$.getToId().getOrDefault(wrappedSerializer, -1);
                     ResourceKey<RecipeSerializer<?>> wrappedKey = mra$.getByValue().get(wrappedSerializer).key();
@@ -623,7 +653,7 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
             public MapCodec<ModdedCookingRecipeOutputShim> codec() {
                 return RecordCodecBuilder.mapCodec(instance -> instance.group(
                         wrappedCodec.forGetter(i -> i.wrapped),
-                        FakeItemStack.CODEC.fieldOf("result").forGetter(i -> new FakeItemStack(i.overrideID))
+                        ModdedCookingRecipeOutputShim.FakeItemStack.CODEC.fieldOf("result").forGetter(i -> new ModdedCookingRecipeOutputShim.FakeItemStack(i.overrideID))
                 ).apply(instance, (wrappedRecipe, fakeItemStack) -> {
                     throw new AssertionError("Only for datagen output");
                 }));
@@ -636,9 +666,9 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
         }
 
         private record FakeItemStack(ResourceLocation id) {
-            public static Codec<FakeItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                    ResourceLocation.CODEC.fieldOf("id").forGetter(FakeItemStack::id)
-            ).apply(instance, FakeItemStack::new));
+            public static Codec<ModdedCookingRecipeOutputShim.FakeItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                    ResourceLocation.CODEC.fieldOf("id").forGetter(ModdedCookingRecipeOutputShim.FakeItemStack::id)
+            ).apply(instance, ModdedCookingRecipeOutputShim.FakeItemStack::new));
         }
     }
 
@@ -656,3 +686,4 @@ public class CNStandardRecipeGen extends CreateRecipeProvider {
             wrapped.accept(id, new ModdedCookingRecipeOutputShim(recipe, outputOverride), advancement, conditions);
         }
     }
+}

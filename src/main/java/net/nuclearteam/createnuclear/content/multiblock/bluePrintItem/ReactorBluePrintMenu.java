@@ -66,7 +66,7 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     }
 
     @Override
-    protected net.minecraftforge.items.ItemStackHandler createGhostInventory() {
+    protected ItemStackHandler createGhostInventory() {
         return getItemStorage(contentHolder);
     }
 

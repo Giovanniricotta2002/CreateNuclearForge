@@ -2,9 +2,11 @@ package net.nuclearteam.createnuclear.content.multiblock.input;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.ResetableLazy;
 import lib.multiblock.SimpleMultiBlockAislePatternBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -14,13 +16,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.nuclearteam.createnuclear.CNBlocks;
 
 import javax.annotation.Nullable;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static net.nuclearteam.createnuclear.content.multiblock.CNMultiblock.*;
@@ -30,13 +30,13 @@ public class ReactorInputEntity extends SmartBlockEntity implements MenuProvider
     //protected ReactorControllerBlockEntity controller;
 
     public ReactorInputInventory inventory;
-    LazyOptional<IItemHandler> inventoryProvider;
+    ResetableLazy<IItemHandler> inventoryProvider;
 
 
     public ReactorInputEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         inventory = new ReactorInputInventory(this);
-        inventoryProvider = LazyOptional.of(() -> inventory);
+        inventoryProvider = ResetableLazy.of(() -> inventory);
 
     }
 
@@ -44,23 +44,19 @@ public class ReactorInputEntity extends SmartBlockEntity implements MenuProvider
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) { }
 
     @Override
-    protected void read(CompoundTag tag, boolean clientPacket) {
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         if (!clientPacket) {
-            inventory.deserializeNBT(tag.getCompound("Inventory"));
+            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         }
-        super.read(tag, clientPacket);
+        super.read(tag, registries, clientPacket);
     }
 
     @Override
-    protected void write(CompoundTag tag, boolean clientPacket) {
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         if (!clientPacket) {
-            tag.put("Inventory", inventory.serializeNBT());
+            tag.put("Inventory", inventory.serializeNBT(registries));
         }
-        super.write(tag, clientPacket);
-    }
-
-    public void readInventory(CompoundTag compound) {
-        inventory.deserializeNBT(compound);
+        super.write(tag, registries, clientPacket);
     }
 
 
@@ -106,14 +102,14 @@ public class ReactorInputEntity extends SmartBlockEntity implements MenuProvider
         super.tick();
     }
 
-    protected boolean isItemHandlerCap(Capability<?> cap) {
+    /*protected boolean isItemHandlerCap(Capability<?> cap) {
         return cap == ForgeCapabilities.ITEM_HANDLER;
-    }
+    }*/
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    /*@Override
+    public <T> ResetableLazy<T> getCapability(Capability<T> cap, Direction side) {
         if (isItemHandlerCap(cap))
             return inventoryProvider.cast();
         return super.getCapability(cap, side);
-    }
+    }*/
 }

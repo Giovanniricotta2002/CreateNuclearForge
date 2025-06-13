@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -30,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-@SuppressWarnings({"deprecation", "unused"})
+@SuppressWarnings({"unused"})
 public class UraniumOreBlock extends Block {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -54,17 +55,17 @@ public class UraniumOreBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide) {
             spawnParticles(level, pos);
         } else {
             interact(state, level, pos);
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        if (itemStack.getItem() instanceof BlockItem && new BlockPlaceContext(player, hand, itemStack, hit).canPlace()) {
-            return InteractionResult.PASS;
+        if (itemStack.getItem() instanceof BlockItem && new BlockPlaceContext(player, hand, itemStack, hitResult).canPlace()) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     private static void interact(BlockState state, Level level, BlockPos pos) {
@@ -89,10 +90,10 @@ public class UraniumOreBlock extends Block {
     @Override
     public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean dropExperience) {
         super.spawnAfterBreak(state, level, pos, stack, dropExperience);
-        if (dropExperience && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
+       /* if (dropExperience && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
             int i = 1 + level.random.nextInt(5);
             this.popExperience(level, pos, i);
-        }
+        }*/
     }
 
     @Override
