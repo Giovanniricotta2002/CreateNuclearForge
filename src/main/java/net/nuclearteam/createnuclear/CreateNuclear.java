@@ -23,6 +23,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteBlocks;
+import net.nuclearteam.createnuclear.content.equipment.armor.CNArmorMaterials;
 import net.nuclearteam.createnuclear.content.kinetics.fan.processing.CNFanProcessingTypes;
 import net.nuclearteam.createnuclear.foundation.advancement.CNAdvancement;
 import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
@@ -67,13 +68,15 @@ public class CreateNuclear {
         CNBlocks.register();
         CNBlockEntityTypes.register();
         CNItems.register();
-        CNPackets.registerPackets();
+        CNPackets.register();
         CNMenus.register();
         CNFluids.register();
         CNEntityType.register();
         CNPaletteBlocks.register();
 
-        CNConfigs.register(modLoadingContext);
+        CNArmorMaterials.register(modEventBus);
+
+        CNConfigs.register(modLoadingContext, modContainer);
 
         CNCreativeModeTabs.register(modEventBus);
         CNEffects.register(modEventBus);
@@ -92,7 +95,6 @@ public class CreateNuclear {
 
     public static void init(final FMLCommonSetupEvent event) {
         CNFluids.registerFluidInteractions();
-        event.enqueueWork(CNPotions::registerPotionsRecipes);
     }
 
     public static void onRegister(final RegisterEvent event) {

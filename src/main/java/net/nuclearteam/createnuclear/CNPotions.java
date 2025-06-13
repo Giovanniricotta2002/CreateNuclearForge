@@ -8,6 +8,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 
@@ -26,9 +27,11 @@ public class CNPotions {
         CN_POTIONS.register(eventBus);
     }
 
-    public static void registerPotionsRecipes() {
-        PotionBrewing.addMix(Potions.AWKWARD, CNItems.ENRICHED_YELLOWCAKE.get(), POTION_1.get());
-        PotionBrewing.addMix(POTION_1.get(), Items.REDSTONE, POTION_AUGMENT_1.get());
-        PotionBrewing.addMix(POTION_1.get(), Items.GLOWSTONE_DUST, POTION_2.get());
+    public static void registerPotionsRecipes(RegisterBrewingRecipesEvent event) {
+        PotionBrewing.Builder builder = event.getBuilder();
+
+        builder.addMix(Potions.AWKWARD, CNItems.ENRICHED_YELLOWCAKE.get(), POTION_1);
+        builder.addMix(POTION_1, Items.REDSTONE, POTION_AUGMENT_1);
+        builder.addMix(POTION_1, Items.GLOWSTONE_DUST, POTION_2);
     }
 }

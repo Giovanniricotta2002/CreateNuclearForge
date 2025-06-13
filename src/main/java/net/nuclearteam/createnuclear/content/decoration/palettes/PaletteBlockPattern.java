@@ -15,42 +15,42 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.core.Direction.Axis;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static net.nuclearteam.createnuclear.content.decoration.palettes.PaletteBlockPartial.ALL_PARTIALS;
-import static net.nuclearteam.createnuclear.content.decoration.palettes.PaletteBlockPartial.FOR_POLISHED;
 import static net.nuclearteam.createnuclear.content.decoration.palettes.PaletteBlockPattern.PatternNameType.*;
 
 @SuppressWarnings("unused")
 public class PaletteBlockPattern {
     public static final PaletteBlockPattern
-        CUT = create("cut", PREFIX, ALL_PARTIALS),
-        BRICKS = create("cut_bricks", WRAP, ALL_PARTIALS).textures("brick"),
-        SMALL_BRICKS = create("small_brick", WRAP, ALL_PARTIALS).textures("small_brick"),
-        POLISHED = create("polished_cut", PREFIX, FOR_POLISHED).textures("polished", "slab"),
+        CUT = create("cut", PREFIX, PaletteBlockPartial.ALL_PARTIALS),
+        BRICKS = create("cut_bricks", WRAP, PaletteBlockPartial.ALL_PARTIALS).textures("brick"),
+        SMALL_BRICKS = create("small_bricks", WRAP, PaletteBlockPartial.ALL_PARTIALS).textures("small_brick"),
+        POLISHED = create("polished_cut", PREFIX, PaletteBlockPartial.FOR_POLISHED).textures("polished", "slab"),
         LAYERED = create("layered", PREFIX).blockStateFactory(p -> p::cubeColumn)
-                .textures("layered", "cap")
-                .connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.CAP))),
+            .textures("layered", "cap")
+            .connectedTextures(v -> new HorizontalCTBehaviour(ct(v, PaletteBlockPattern.CTs.LAYERED), ct(v, PaletteBlockPattern.CTs.CAP))),
         PILLAR = create("pillar", SUFFIX).blockStateFactory(p -> p::pillar)
-                .block(ConnectedPillarBlock::new)
-                .textures("pillar", "cap")
-                .connectedTextures(v -> new RotatedPillarCTBehaviour(ct(v, CTs.PILLAR), ct(v, CTs.CAP)))
-    ;
+            .block(ConnectedPillarBlock::new)
+            .textures("pillar", "cap")
+            .connectedTextures(v -> new RotatedPillarCTBehaviour(ct(v, PaletteBlockPattern.CTs.PILLAR), ct(v, PaletteBlockPattern.CTs.CAP)))
 
-    public static final PaletteBlockPattern[] VANILLA_RANGE = { CUT, BRICKS, SMALL_BRICKS, POLISHED, LAYERED, PILLAR };
-    public static final PaletteBlockPattern[] STANDARD_RANGE = { CUT, BRICKS, SMALL_BRICKS, POLISHED, LAYERED, PILLAR };
+        ;
+
+    public static final PaletteBlockPattern[] VANILLA_RANGE = { CUT, POLISHED, BRICKS, SMALL_BRICKS, LAYERED, PILLAR };
+
+    public static final PaletteBlockPattern[] STANDARD_RANGE = { CUT, POLISHED, BRICKS, SMALL_BRICKS, LAYERED, PILLAR };
 
     static final String TEXTURE_LOCATION = "block/palettes/stone_types/%s/%s";
 
-    private PatternNameType nameType;
+    private PaletteBlockPattern.PatternNameType nameType;
     private String[] textures;
     private String id;
     private boolean isTranslucent;
@@ -58,7 +58,7 @@ public class PaletteBlockPattern {
     private TagKey<Item>[] itemTags;
     private Optional<Function<String, ConnectedTextureBehaviour>> ctFactory;
 
-    private IPatternBlockStateGenerator blockStateGenerator;
+    private PaletteBlockPattern.IPatternBlockStateGenerator blockStateGenerator;
     private NonNullFunction<Properties, ? extends Block> blockFactory;
     private NonNullFunction<NonNullSupplier<Block>, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> additionalRecipes;
     private PaletteBlockPartial<? extends Block>[] partials;
@@ -66,7 +66,8 @@ public class PaletteBlockPattern {
     @OnlyIn(Dist.CLIENT)
     private RenderType renderType;
 
-    private static PaletteBlockPattern create(String name, PatternNameType nameType, PaletteBlockPartial<?> ...partials) {
+    private static PaletteBlockPattern create(String name, PaletteBlockPattern.PatternNameType nameType,
+                                                                                              PaletteBlockPartial<?>... partials) {
         PaletteBlockPattern pattern = new PaletteBlockPattern();
         pattern.id = name;
         pattern.ctFactory = Optional.empty();
@@ -108,13 +109,17 @@ public class PaletteBlockPattern {
         return textures[index];
     }
 
-    public void addRecipes(NonNullSupplier<Block> baseBlock, DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
-        additionalRecipes.apply(baseBlock).accept(c, p);
+    public void addRecipes(NonNullSupplier<Block> baseBlock, DataGenContext<Block, ? extends Block> c,
+                           RegistrateRecipeProvider p) {
+        additionalRecipes.apply(baseBlock)
+                .accept(c, p);
     }
 
     public Optional<Supplier<ConnectedTextureBehaviour>> createCTBehaviour(String variant) {
         return ctFactory.map(d -> () -> d.apply(variant));
     }
+
+    // Builder
 
     private PaletteBlockPattern blockStateFactory(IPatternBlockStateGenerator factory) {
         blockStateGenerator = factory;
@@ -202,19 +207,16 @@ public class PaletteBlockPattern {
                 String.format(TEXTURE_LOCATION, texture, variant + (texture.equals("cut") ? "_" : "_cut_") + texture));
     }
 
-    protected static CTSpriteShiftEntry ct(String variant, CTs texture) {
+    protected static CTSpriteShiftEntry ct(String variant, PaletteBlockPattern.CTs texture) {
         ResourceLocation resLoc = texture.srcFactory.apply(variant);
         ResourceLocation resLocTarget = texture.targetFactory.apply(variant);
         return CTSpriteShifter.getCT(texture.type, resLoc,
-                new ResourceLocation(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
+                ResourceLocation.fromNamespaceAndPath(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
     }
-
-
-
 
     @FunctionalInterface
     interface IPatternBlockStateGenerator
-            extends Function<PaletteBlockPattern, Function<String, IBlockStateProvider>> {
+            extends Function<PaletteBlockPattern, Function<String, PaletteBlockPattern.IBlockStateProvider>> {
     }
 
     @FunctionalInterface
@@ -226,13 +228,17 @@ public class PaletteBlockPattern {
         PREFIX, SUFFIX, WRAP
     }
 
+    // Textures with connectability, used by Spriteshifter
+
     public enum CTs {
+
         PILLAR(AllCTTypes.RECTANGLE, s -> toLocation(s, "pillar")),
         CAP(AllCTTypes.OMNIDIRECTIONAL, s -> toLocation(s, "cap")),
-        LAYERED(AllCTTypes.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered")),
+        LAYERED(AllCTTypes.HORIZONTAL_KRYPPERS, s -> toLocation(s, "layered"))
+
         ;
 
-        public final CTType type;
+        public CTType type;
         private final Function<String, ResourceLocation> srcFactory;
         private final Function<String, ResourceLocation> targetFactory;
 
@@ -240,10 +246,12 @@ public class PaletteBlockPattern {
             this(type, factory, factory);
         }
 
-        CTs(CTType type, Function<String, ResourceLocation> srcfactory, Function<String, ResourceLocation> targetFactory) {
+        CTs(CTType type, Function<String, ResourceLocation> srcFactory,
+            Function<String, ResourceLocation> targetFactory) {
             this.type = type;
-            this.srcFactory = srcfactory;
+            this.srcFactory = srcFactory;
             this.targetFactory = targetFactory;
         }
+
     }
 }

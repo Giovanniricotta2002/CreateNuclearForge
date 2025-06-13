@@ -1,10 +1,14 @@
 package net.nuclearteam.createnuclear.content.effects;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.nuclearteam.createnuclear.CNEffects;
+import net.nuclearteam.createnuclear.CNPotions;
 import net.nuclearteam.createnuclear.CNTags;
+import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,28 +24,15 @@ public class RadiationEffect extends MobEffect {
 
         // Reduces movement speed by 20%
         this.addAttributeModifier(Attributes.MOVEMENT_SPEED,
-                "91AEAA56-376B-4498-935B-2F7F68070635", -0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                ResourceLocation.fromNamespaceAndPath(CreateNuclear.MOD_ID, "radiation_movement_speed"), -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         // Reduces attack damage by 20%
         this.addAttributeModifier(Attributes.ATTACK_DAMAGE,
-                "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", -0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                ResourceLocation.fromNamespaceAndPath(CreateNuclear.MOD_ID, "radiation_attack_damage"), -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         // Reduces attack speed by 20%
         this.addAttributeModifier(Attributes.ATTACK_SPEED,
-                "55FCED67-E92A-486E-9800-B47F202C4386", -0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    }
-
-    /**
-     * Determines if the effect should be applied this tick.
-     * Returning true causes the effect to apply every tick.
-     *
-     * @param duration  The remaining duration of the effect.
-     * @param amplifier The strength (level) of the effect.
-     * @return true if the effect should apply on this tick.
-     */
-    @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
-        return true;
+                ResourceLocation.fromNamespaceAndPath(CreateNuclear.MOD_ID, "radiation_attack_speed"), -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     /**
@@ -54,11 +45,11 @@ public class RadiationEffect extends MobEffect {
      * @param amplifier    The strength (level) of the effect.
      */
     @Override
-    public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
         // If the entity is immune to radiation, remove the effect
         if (livingEntity.getType().is(CNTags.CNEntityTags.IRRADIATED_IMMUNE.tag)) {
-            livingEntity.removeEffect(this);
-            return;
+            livingEntity.removeEffect(CNEffects.RADIATION);
+            return true;
         }
 
         // Check if the entity is wearing any anti-radiation armor
@@ -72,12 +63,13 @@ public class RadiationEffect extends MobEffect {
 
         // If protected by armor, do not apply damage
         if (isWearingAntiRadiationArmor) {
-            return;
+            return false;
 
         }
 
         // Apply radiation damage (magic type), scaled by amplifier
         int damage = 1 << amplifier;
         livingEntity.hurt(livingEntity.damageSources().magic(), damage);
+        return true;
     }
 }

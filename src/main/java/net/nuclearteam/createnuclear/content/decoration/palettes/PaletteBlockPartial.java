@@ -9,6 +9,7 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
+import net.createmod.catnip.lang.Lang;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -24,11 +25,12 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.foundation.utility.CreateNuclearLang;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -37,6 +39,7 @@ import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public abstract class PaletteBlockPartial<B extends Block> {
+
     public static final PaletteBlockPartial<StairBlock> STAIR = new Stairs();
     public static final PaletteBlockPartial<SlabBlock> SLAB = new Slab(false);
     public static final PaletteBlockPartial<SlabBlock> UNIQUE_SLAB = new Slab(true);
@@ -53,7 +56,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
     public @NonnullType BlockBuilder<B, CreateRegistrate> create(String variantName, PaletteBlockPattern pattern,
                                                                  BlockEntry<? extends Block> block, CNPaletteStoneTypes variant) {
-        String patternName = CreateNuclearLang.nonPluralId(pattern.createName(variantName));
+        String patternName = Lang.nonPluralId(pattern.createName(variantName));
         String blockName = patternName + "_" + this.name;
 
         BlockBuilder<B, CreateRegistrate> blockBuilder = CreateNuclear.REGISTRATE
@@ -112,8 +115,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected StairBlock createBlock(Supplier<? extends Block> block) {
-            return new StairBlock(() -> block.get()
-                    .defaultBlockState(), BlockBehaviour.Properties.copy(block.get()));
+            return new StairBlock(block.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(block.get()));
         }
 
         @Override
@@ -124,27 +126,27 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected Iterable<TagKey<Block>> getBlockTags() {
-            return List.of(BlockTags.STAIRS);
+            return Arrays.asList(BlockTags.STAIRS);
         }
 
         @Override
         protected Iterable<TagKey<Item>> getItemTags() {
-            return List.of(ItemTags.STAIRS);
+            return Arrays.asList(ItemTags.STAIRS);
         }
 
         @Override
         protected void createRecipes(CNPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
                                      DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
             RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
-            p.stairs(DataIngredient.items(patternBlock.get()), category, c, c.getName(), false);
-            p.stonecutting(DataIngredient.tag(type.materialTag), category, c, 1);
+            p.stairs(DataIngredient.items(patternBlock.get()), category, c::get, c.getName(), false);
+            p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 1);
         }
 
     }
 
     private static class Slab extends PaletteBlockPartial<SlabBlock> {
 
-        private final boolean customSide;
+        private boolean customSide;
 
         public Slab(boolean customSide) {
             super("slab");
@@ -153,7 +155,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected SlabBlock createBlock(Supplier<? extends Block> block) {
-            return new SlabBlock(BlockBehaviour.Properties.copy(block.get()));
+            return new SlabBlock(BlockBehaviour.Properties.ofFullCopy(block.get()));
         }
 
         @Override
@@ -187,25 +189,25 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected Iterable<TagKey<Block>> getBlockTags() {
-            return List.of(BlockTags.SLABS);
+            return Arrays.asList(BlockTags.SLABS);
         }
 
         @Override
         protected Iterable<TagKey<Item>> getItemTags() {
-            return List.of(ItemTags.SLABS);
+            return Arrays.asList(ItemTags.SLABS);
         }
 
         @Override
         protected void createRecipes(CNPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
                                      DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
             RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
-            p.slab(DataIngredient.items(patternBlock.get()), category, c, c.getName(), false);
-            p.stonecutting(DataIngredient.tag(type.materialTag), category, c, 2);
+            p.slab(DataIngredient.items(patternBlock.get()), category, c::get, c.getName(), false);
+            p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 2);
             DataIngredient ingredient = DataIngredient.items(c.get());
             ShapelessRecipeBuilder.shapeless(category, patternBlock.get())
-                    .requires(ingredient)
-                    .requires(ingredient)
-                    .unlockedBy("has_" + c.getName(), ingredient.getCritereon(p))
+                    .requires(ingredient.toVanilla())
+                    .requires(ingredient.toVanilla())
+                    .unlockedBy("has_" + c.getName(), ingredient.getCriterion(p))
                     .save(p, CreateNuclear.MOD_ID + ":" + c.getName() + "_recycling");
         }
 
@@ -226,7 +228,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected WallBlock createBlock(Supplier<? extends Block> block) {
-            return new WallBlock(BlockBehaviour.Properties.copy(block.get()).forceSolidOn());
+            return new WallBlock(BlockBehaviour.Properties.ofFullCopy(block.get()).forceSolidOn());
         }
 
         @Override
@@ -245,27 +247,28 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
         @Override
         protected Iterable<TagKey<Block>> getBlockTags() {
-            return List.of(BlockTags.WALLS);
+            return Arrays.asList(BlockTags.WALLS);
         }
 
         @Override
         protected Iterable<TagKey<Item>> getItemTags() {
-            return List.of(ItemTags.WALLS);
+            return Arrays.asList(ItemTags.WALLS);
         }
 
         @Override
         protected void createRecipes(CNPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
                                      DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
             RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
-            p.stonecutting(DataIngredient.tag(type.materialTag), category, c, 1);
+            p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 1);
             DataIngredient ingredient = DataIngredient.items(patternBlock.get());
             ShapedRecipeBuilder.shaped(category, c.get(), 6)
                     .pattern("XXX")
                     .pattern("XXX")
-                    .define('X', ingredient)
-                    .unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+                    .define('X', ingredient.toVanilla())
+                    .unlockedBy("has_" + p.safeName(ingredient), ingredient.getCriterion(p))
                     .save(p, p.safeId(c.get()));
         }
 
     }
+
 }

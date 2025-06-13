@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
@@ -10,13 +11,13 @@ public abstract class EasingHudOverlay implements HudOverlay {
     protected float fadeSpeed = 0.03f;
 
     @Override
-    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         // Update progress based on the active state
         progress = isActive()
                 ? Math.min(1f, progress + fadeSpeed)
                 : Math.max(0f, progress - fadeSpeed);
         if (progress > 0f) {
-            renderWithAlpha(graphics, partialTicks, ease(progress));
+            renderWithAlpha(guiGraphics, deltaTracker.getRealtimeDeltaTicks(), ease(progress));
         }
     }
 

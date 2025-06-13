@@ -1,34 +1,33 @@
 package net.nuclearteam.createnuclear.content.multiblock.controller;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.nuclearteam.createnuclear.CNPackets;
 import net.nuclearteam.createnuclear.foundation.events.overlay.EventTextOverlay;
 
 /**
  * Packet sent from server to client to trigger a localized event overlay.
  */
-public class EventTriggerPacket extends SimplePacketBase {
-    // Duration in ticks for which the overlay should be displayed
-    private final int duration;
+public record EventTriggerPacket(int duration) implements ClientboundPacketPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, EventTriggerPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, EventTriggerPacket::duration,
+            EventTriggerPacket::new
+    );
 
-    public EventTriggerPacket(int duration) {
-        this.duration = duration;
-    }
-
-    // Decoder constructor
-    public EventTriggerPacket(FriendlyByteBuf buffer) {
-        this(buffer.readInt());
+    @Override
+    public PacketTypeProvider getTypeProvider() {
+        return CNPackets.TRIGGER_EVENT_TEXT_OVERLAY;
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(duration);
-    }
-
-    @Override
-    public boolean handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> EventTextOverlay.triggerEvent(duration));
-        return true;
+    @OnlyIn(Dist.CLIENT)
+    public void handle(LocalPlayer player) {
+        EventTextOverlay.triggerEvent(duration);
     }
 }

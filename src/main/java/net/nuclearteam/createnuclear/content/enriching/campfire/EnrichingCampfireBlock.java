@@ -1,5 +1,8 @@
 package net.nuclearteam.createnuclear.content.enriching.campfire;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -10,11 +13,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
@@ -24,6 +29,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -46,26 +52,39 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"deprecation", "unused"})
 public class EnrichingCampfireBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, IBE<EnrichingCampfireBlockEntity> {
+    public static final MapCodec<EnrichingCampfireBlock> CODEC = RecordCodecBuilder.mapCodec(
+            (enrichChampFireBlock) ->
+                    enrichChampFireBlock
+                            .group(Codec.intRange(0, 1000)
+                            .fieldOf("fire_damage")
+                            .forGetter((p_304360_) -> p_304360_.fireDamage), propertiesCodec()).apply(enrichChampFireBlock, EnrichingCampfireBlock::new));
+
     protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 7.0, 16.0);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final boolean spawnParticles;
+    private final int fireDamage;
 
     public EnrichingCampfireBlock(Properties property, boolean spawnParticles, int fireDamage) {
         super(property);
         this.spawnParticles = spawnParticles;
+        this.fireDamage = fireDamage;
         this.registerDefaultState(this.stateDefinition.any().setValue(LIT, true).setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
 
+    public EnrichingCampfireBlock(int fireDamage, Properties property) {
+        this(property, true, fireDamage);
+    }
+
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return InteractionResult.PASS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (state.getValue(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entity)) {
+        if (state.getValue(LIT) && entity instanceof LivingEntity) {
             ((LivingEntity) entity).addEffect(new MobEffectInstance(CNEffects.RADIATION.getDelegate(), 100, 0));
         }
         super.entityInside(state, level, pos, entity);
@@ -91,6 +110,11 @@ public class EnrichingCampfireBlock extends BaseEntityBlock implements SimpleWat
     @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return SHAPE;
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     @Override
@@ -202,11 +226,6 @@ public class EnrichingCampfireBlock extends BaseEntityBlock implements SimpleWat
             }
         }
         return null;
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
-        return false;
     }
 
     public static int getLight(BlockState state) {

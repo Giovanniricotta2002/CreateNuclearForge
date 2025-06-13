@@ -67,6 +67,6 @@ public class ReactorBluePrintItemScreen extends AbstractSimiContainerScreen<Reac
 
     private static void sendValueUpdate(CompoundTag tag, float heat, int graphiteTime, int uraniumTime, int countGraphiteRod, int countUraniumRod) {
         CNPackets.getChannel()
-                .sendToServer(new ReactorBluePrintItemPacket(tag, heat, graphiteTime, uraniumTime, countGraphiteRod, countGraphiteRod));
+                .sendToServer(new ReactorBluePrintItemPacket2(tag, heat, graphiteTime, uraniumTime, countGraphiteRod, countGraphiteRod));
     }
 }

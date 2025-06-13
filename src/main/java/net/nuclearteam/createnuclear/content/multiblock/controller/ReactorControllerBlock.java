@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -61,32 +62,32 @@ public class ReactorControllerBlock extends HorizontalDirectionalReactorBlock im
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide)
+            return ItemInteractionResult.SUCCESS;
 
-        BlockEntity blockEntity = worldIn.getBlockEntity(pos);
-        if (!(blockEntity instanceof ReactorControllerBlockEntity controllerBlockEntity)) return InteractionResult.PASS;
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (!(blockEntity instanceof ReactorControllerBlockEntity controllerBlockEntity)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        ItemStack heldItem = player.getItemInHand(handIn);
+        ItemStack heldItem = player.getItemInHand(hand);
 
         if (!state.getValue(ASSEMBLED)) {
             player.sendSystemMessage(Component.translatable("reactor.info.assembled.none").withStyle(ChatFormatting.RED));
         }
         else {
             if (heldItem.is(CNItems.REACTOR_BLUEPRINT.get()) && controllerBlockEntity.inventory.getItem(0).isEmpty()){
-                withBlockEntityDo(worldIn, pos, be -> {
+                withBlockEntityDo(level, pos, be -> {
                     be.inventory.setStackInSlot(0, heldItem);
                     be.configuredPattern = heldItem;
 
-                    player.setItemInHand(handIn, ItemStack.EMPTY);
+                    player.setItemInHand(hand, ItemStack.EMPTY);
                 });
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
             }
             else if (heldItem.isEmpty() && !controllerBlockEntity.inventory.getItem(0).isEmpty()) {
-                withBlockEntityDo(worldIn, pos, be -> {
-                    player.setItemInHand(handIn, be.inventory.getItem(0));
+                withBlockEntityDo(level, pos, be -> {
+                    player.setItemInHand(hand, be.inventory.getItem(0));
                     be.inventory.setStackInSlot(0, ItemStack.EMPTY);
                     be.configuredPattern = ItemStack.EMPTY;
                     be.total = 0.0;
@@ -94,14 +95,14 @@ public class ReactorControllerBlock extends HorizontalDirectionalReactorBlock im
                     be.notifyUpdate();
                 });
                 state.setValue(ASSEMBLED, false);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
             }
             else if (!heldItem.isEmpty() && !controllerBlockEntity.inventory.getItem(0).isEmpty()) {
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

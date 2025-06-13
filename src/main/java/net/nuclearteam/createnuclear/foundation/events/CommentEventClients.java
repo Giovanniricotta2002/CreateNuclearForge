@@ -14,4 +14,6 @@ public class CommentEventClients {
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         CNEntityType.registerModelLayer(event);
     }
+
+
 }

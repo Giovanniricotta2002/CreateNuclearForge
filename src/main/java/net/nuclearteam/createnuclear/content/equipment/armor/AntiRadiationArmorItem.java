@@ -1,7 +1,10 @@
 package net.nuclearteam.createnuclear.content.equipment.armor;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.content.equipment.armor.BaseArmorItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,63 +25,63 @@ public class AntiRadiationArmorItem {
     public static final ArmorItem.Type CHESTPLATE = ArmorItem.Type.CHESTPLATE;
     public static final ArmorItem.Type LEGGINGS = ArmorItem.Type.LEGGINGS;
     public static final ArmorItem.Type BOOTS = ArmorItem.Type.BOOTS;
-    public static final ArmorMaterial ARMOR_MATERIAL = ArmorMaterials.ANTI_RADIATION_SUIT;
+    public static final Holder<ArmorMaterial> ARMOR_MATERIAL = CNArmorMaterials.ANTI_RADIATION_SUIT;
 
 
-    public static class Helmet extends ArmorItem {
+    public static class Helmet extends BaseArmorItem {
         protected final DyeColor color;
-        public Helmet(Properties properties, DyeColor color) {
-            super(ARMOR_MATERIAL, HELMET, properties);
-            this.color = color;
-        }
 
-        @Override
-        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-            return String.valueOf(CreateNuclear.asResource("textures/models/armor/"+color+"_anti_radiation_suit_layer_"+(slot == EquipmentSlot.LEGS ? 2 : 1)+".png"));
+        public Helmet(Properties properties, DyeColor color) {
+            super(
+                    CNArmorMaterials.ANTI_RADIATION_SUIT,
+                    HELMET,
+                    properties,
+                    CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", color.getName()))
+            );
+            this.color = color;
         }
 
         public static class DyeItemHelmetList<T extends Helmet> implements Iterable<ItemEntry<T>> {
             private static final int COLOR_AMOUNT = DyeColor.values().length;
 
-            private final ItemEntry<?>[] entry = new ItemEntry<?>[COLOR_AMOUNT];
+            @SuppressWarnings("unchecked")
+            private final ItemEntry<T>[] entry = (ItemEntry<T>[]) new ItemEntry<?>[COLOR_AMOUNT];
 
             public DyeItemHelmetList(Function<DyeColor, ItemEntry<? extends T>> filler) {
                 for (DyeColor color : DyeColor.values()) {
-                    entry[color.ordinal()] = filler.apply(color);
+                    entry[color.ordinal()] = (ItemEntry<T>) filler.apply(color);
                 }
             }
 
-            @SuppressWarnings("unchecked")
             public ItemEntry<T> get(DyeColor color) {
-                return (ItemEntry<T>) entry[color.ordinal()];
+                return entry[color.ordinal()];
             }
 
             public boolean contains(Item block) {
-                for (ItemEntry<?> entry : entry) {
+                for (ItemEntry<T> entry : entry) {
                     if (entry.is(block)) return true;
                 }
                 return false;
             }
 
-            @SuppressWarnings("unchecked")
             public ItemEntry<T>[] toArray() {
-                return (ItemEntry<T>[]) Arrays.copyOf(entry, entry.length);
+                return Arrays.copyOf(entry, entry.length);
             }
 
             @Override
             public Iterator<ItemEntry<T>> iterator() {
                 return new Iterator<>() {
                     private int index = 0;
+
                     @Override
                     public boolean hasNext() {
                         return index < entry.length;
                     }
 
-                    @SuppressWarnings("unchecked")
                     @Override
                     public ItemEntry<T> next() {
                         if (!hasNext()) throw new NoSuchElementException();
-                        return (ItemEntry<T>) entry[index++];
+                        return entry[index++];
                     }
                 };
             }
@@ -89,23 +92,23 @@ public class AntiRadiationArmorItem {
                     ? CNItemTags.ANTI_RADIATION_ARMOR.tag
                     : CNItemTags.ANTI_RADIATION_HELMET_DYE.tag;
         }
-
-
     }
 
-    public static class Chestplate extends ArmorItem {
+
+    public static class Chestplate extends BaseArmorItem {
         protected final DyeColor color;
 
         public Chestplate(Properties properties, DyeColor color) {
-            super(ARMOR_MATERIAL, CHESTPLATE, properties);
+            super(
+                    CNArmorMaterials.ANTI_RADIATION_SUIT,
+                    CHESTPLATE,
+                    properties,
+                    CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", color.getName()))
+            );
             this.color = color;
 
         }
 
-        @Override
-        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-            return String.valueOf(CreateNuclear.asResource("textures/models/armor/"+color+"_anti_radiation_suit_layer_"+(slot == EquipmentSlot.LEGS ? 2 : 1)+".png"));
-        }
 
         public static class DyeItemChestplateList<T extends Chestplate> implements Iterable<ItemEntry<T>> {
             private static final int COLOR_AMOUNT = DyeColor.values().length;
@@ -161,18 +164,18 @@ public class AntiRadiationArmorItem {
         }
     }
 
-    public static class Leggings extends ArmorItem {
+    public static class Leggings extends BaseArmorItem {
         protected final DyeColor color;
 
         public Leggings(Properties properties, DyeColor color) {
-            super(ARMOR_MATERIAL, LEGGINGS, properties);
+            super(
+                    CNArmorMaterials.ANTI_RADIATION_SUIT,
+                    CHESTPLATE,
+                    properties,
+                    CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", color.getName()))
+            );
             this.color = color;
 
-        }
-
-        @Override
-        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-            return String.valueOf(CreateNuclear.asResource("textures/models/armor/"+color+"_anti_radiation_suit_layer_"+(slot == EquipmentSlot.LEGS ? 2 : 1)+".png"));
         }
 
         public static class DyeItemLeggingsList<T extends Leggings> implements Iterable<ItemEntry<T>> {
@@ -229,22 +232,21 @@ public class AntiRadiationArmorItem {
         }
     }
 
-    public static class Boot extends ArmorItem {
+    public static class Boot extends BaseArmorItem {
         public Boot(Properties properties) {
-            super(ARMOR_MATERIAL, BOOTS, properties);
-        }
-
-        @Override
-        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-            return String.valueOf(CreateNuclear.asResource("textures/models/armor/white_anti_radiation_suit_layer_1.png"));
-
+            super(
+                    CNArmorMaterials.ANTI_RADIATION_SUIT,
+                    CHESTPLATE,
+                    properties,
+                    CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", DyeColor.WHITE.getName()))
+            );
         }
     }
 
     public static class DyeRecipeArmorList implements Iterable<GeneratedRecipe> {
         private static final int COLOR_AMOUNT = DyeColor.values().length;
 
-        protected final GeneratedRecipe[] recipes = new GeneratedRecipe[][getColorCount()];
+        protected final GeneratedRecipe[] recipes = new GeneratedRecipe[getColorCount()];
 
         public DyeRecipeArmorList(Function<@NotNull DyeColor, GeneratedRecipe> filler) {
             for (DyeColor color : DyeColor.values()) {

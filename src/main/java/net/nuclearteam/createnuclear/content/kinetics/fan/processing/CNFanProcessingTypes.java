@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.content.kinetics.fan.processing;
 
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
@@ -14,12 +15,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.nuclearteam.createnuclear.*;
 import net.nuclearteam.createnuclear.content.enriching.campfire.EnrichingCampfireBlock;
-import net.nuclearteam.createnuclear.content.kinetics.fan.processing.EnrichedRecipe.EnrichedWrapper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,7 +62,6 @@ public class CNFanProcessingTypes {
     }
 
     public static class EnrichedType implements FanProcessingType {
-        private static final EnrichedWrapper ENRICHED_WRAPPER = new EnrichedWrapper();
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
@@ -77,17 +79,17 @@ public class CNFanProcessingTypes {
 
         @Override
         public boolean canProcess(ItemStack stack, Level level) {
-            ENRICHED_WRAPPER.setItem(0, stack);
-            Optional<EnrichedRecipe> recipe = CNRecipeTypes.ENRICHED.find(ENRICHED_WRAPPER, level);
+            Optional<RecipeHolder<Recipe<SingleRecipeInput>>> recipe = CNRecipeTypes.ENRICHED.find(new SingleRecipeInput(stack), level);
             return recipe.isPresent();
         }
 
         @Nullable
         @Override
         public List<ItemStack> process(ItemStack stack, Level level) {
-            ENRICHED_WRAPPER.setItem(0, stack);
-            Optional<EnrichedRecipe> recipe = CNRecipeTypes.ENRICHED.find(ENRICHED_WRAPPER, level);
-            return recipe.map(enrichedRecipe -> RecipeApplier.applyRecipeOn(level, stack, enrichedRecipe)).orElse(null);
+            Optional<RecipeHolder<Recipe<SingleRecipeInput>>> recipe = CNRecipeTypes.ENRICHED.find(new SingleRecipeInput(stack), level);
+            if (recipe.isPresent())
+                return RecipeApplier.applyRecipeOn(level, stack, recipe.get());
+            return null;
         }
 
         @Override

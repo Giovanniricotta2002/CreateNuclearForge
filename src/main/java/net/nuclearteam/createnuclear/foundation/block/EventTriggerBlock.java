@@ -1,7 +1,9 @@
 package net.nuclearteam.createnuclear.foundation.block;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +31,7 @@ public class EventTriggerBlock extends Block {
             // Send a packet to all clients around this block within 16 blocks
             EventTriggerPacket packet = new EventTriggerPacket(100); // display for 100 ticks
             CreateNuclear.LOGGER.warn("hum EventTriggerBlock ? {}", packet);
-            CNPackets.sendToNear(level, pos, 16, packet);
+            CatnipServices.NETWORK.sendToClientsAround((ServerLevel) level, pos, 16, packet);
         }
         return ItemInteractionResult.SUCCESS;
     }

@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -45,7 +46,7 @@ public class HelmetOverlay  implements HudOverlay {
     }
 
     @Override
-    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (!isActive()) return;
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -66,7 +67,7 @@ public class HelmetOverlay  implements HudOverlay {
         RadiationOverlay.setCoverage(COVERAGE_FACTORS[index]);
 
         // Render helmet overlay texture
-        RenderHelper.renderFirstPersonOverlay(graphics, HELMET_TEXTURES[index], 1f, 1f);
+        RenderHelper.renderFirstPersonOverlay(guiGraphics, HELMET_TEXTURES[index], 1f, 1f);
         // Render the hotbar behind the helmet overlay
         //Minecraft.getInstance().gui.renderItemHotbar(12f, graphics);
     }

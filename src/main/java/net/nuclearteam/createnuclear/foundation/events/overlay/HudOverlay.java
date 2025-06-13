@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public interface HudOverlay {
 
     LayeredDraw.Layer getOverlay();
 
-    void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height);
+    void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker);
 
     default void register(RegisterGuiLayersEvent event) {
         event.registerAbove(

@@ -1,11 +1,8 @@
 package net.nuclearteam.createnuclear;
 
-import com.ibm.icu.util.Output;
-import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
-import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;

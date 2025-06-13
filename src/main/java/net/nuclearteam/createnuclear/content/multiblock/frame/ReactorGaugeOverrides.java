@@ -3,7 +3,7 @@ package net.nuclearteam.createnuclear.content.multiblock.frame;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 
 public class ReactorGaugeOverrides {
     public static ItemModelBuilder addOverrideModels(DataGenContext<Item, ReactorframeItem> c, RegistrateItemModelProvider p) {

@@ -1,15 +1,13 @@
 package net.nuclearteam.createnuclear.foundation.events.overlay;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.nuclearteam.createnuclear.CreateNuclear;
 
@@ -43,16 +41,16 @@ public class EventTextOverlay implements HudOverlay {
     }
 
     @Override
-    public void render(GuiGraphics gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (!isActive()) return;
         if (timer-- <= 0) return;
         CreateNuclear.LOGGER.warn("hum EventTextOverlay: {}", timer);
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
         Component text = Component.translatable("overlay.event_message", timer).withStyle(ChatFormatting.RED);
-        int widths = graphics.guiWidth();
+        int widths = guiGraphics.guiWidth();
         int x = (widths - Minecraft.getInstance().font.width(text)) / 2;
-        graphics.drawString(Minecraft.getInstance().font, text, x, 10, 0xFFFFFF);
+        guiGraphics.drawString(Minecraft.getInstance().font, text, x, 10, 0xFFFFFF);
     }
 
     @Override

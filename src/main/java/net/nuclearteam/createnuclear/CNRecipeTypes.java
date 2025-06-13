@@ -2,19 +2,15 @@ package net.nuclearteam.createnuclear;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -73,8 +69,8 @@ public enum CNRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
         isProcessingRecipe = false;
     }
 
-    CNRecipeTypes(ProcessingRecipeBuilder.ProcessingRecipeFactory<?> processingFactory) {
-        this(() -> new ProcessingRecipeSerializer<>(processingFactory));
+    CNRecipeTypes(StandardProcessingRecipe.Factory<?> processingFactory) {
+        this(() -> new StandardProcessingRecipe.Serializer<>(processingFactory));
         isProcessingRecipe = true;
     }
 

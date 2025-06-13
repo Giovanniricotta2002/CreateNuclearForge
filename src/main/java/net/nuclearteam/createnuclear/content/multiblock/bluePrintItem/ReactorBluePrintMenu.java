@@ -3,14 +3,17 @@ package net.nuclearteam.createnuclear.content.multiblock.bluePrintItem;
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import net.nuclearteam.createnuclear.CNMenus;
 import net.nuclearteam.createnuclear.CNTags;
 
@@ -34,6 +37,8 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
         super(type, id, inv, contentHolder);
     }
+
+
 
     public static ReactorBluePrintMenu create(int id, Inventory inv, ItemStack stack) {
         return new ReactorBluePrintMenu(CNMenus.REACTOR_BLUEPRINT_MENU.get(), id, inv, stack);
@@ -72,8 +77,8 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected ItemStack createOnClient(FriendlyByteBuf extraData) {
-        return extraData.readItem();
+    protected ItemStack createOnClient(RegistryFriendlyByteBuf extraData) {
+        return ItemStack.STREAM_CODEC.decode(extraData);
     }
 
     @Override
@@ -100,7 +105,7 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
         };
 
         for (int[] pos : positions) {// up and down not middle
-            this.addSlot(new net.minecraftforge.items.SlotItemHandler(ghostInventory,i, startWidth + incr * pos[0], startHeight + incr * pos[1]));
+            this.addSlot(new SlotItemHandler(ghostInventory,i, startWidth + incr * pos[0], startHeight + incr * pos[1]));
             i++;
         }
     }

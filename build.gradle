@@ -35,6 +35,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 neoForge {
     version = neo_version
 
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+
     parchment {
         minecraftVersion = "1.21.1"
         mappingsVersion = "2024.11.17"

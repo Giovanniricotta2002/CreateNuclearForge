@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.IInteractionChecker;
 import lib.multiblock.SimpleMultiBlockAislePatternBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,10 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.nuclearteam.createnuclear.CNBlocks;
-import net.nuclearteam.createnuclear.CNItems;
-import net.nuclearteam.createnuclear.CNPackets;
-import net.nuclearteam.createnuclear.CreateNuclear;
+import net.nuclearteam.createnuclear.*;
 import net.nuclearteam.createnuclear.content.multiblock.IHeat;
 import net.nuclearteam.createnuclear.content.multiblock.input.ReactorInputEntity;
 import net.nuclearteam.createnuclear.content.multiblock.output.ReactorOutput;
@@ -108,13 +106,13 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if(!configuredPattern.getOrCreateTag().isEmpty()) {
+        if(!configuredPattern.isEmpty()) {
             CreateLang.translate("gui.gauge.info_header")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
             IHeat.HeatLevel.getName("reactor_controller").style(ChatFormatting.GRAY).forGoggles(tooltip);
 
-            IHeat.HeatLevel.getFormattedHeatText(configuredPattern.getOrCreateTag().getInt("heat")).forGoggles(tooltip);
+            IHeat.HeatLevel.getFormattedHeatText(configuredPattern.get(CNDataComponents.HEAT).intValue()).forGoggles(tooltip);
 
             if (fuelItem.isEmpty()) {
                 // if rod empty we initialize it at 1 (and display it as 0) to avoid having air item displayed instead of the rod
@@ -134,17 +132,16 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
         return true;
     }
 
-
     //(Si les methode read et write ne sont pas implémenté alors lorsque l'on relance le monde minecraft les items dans le composant auront disparu !)
     @Override
-    protected void read(CompoundTag compound, boolean clientPacket) { //Permet de stocker les item 1/2
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) { //Permet de stocker les item 1/2
         if (!clientPacket) {
-            inventory.deserializeNBT(compound.getCompound("pattern"));
+            inventory.deserializeNBT(registries, tag.getCompound("pattern"));
         }
-        configuredPattern = ItemStack.of(compound.getCompound("items"));
-        if (ItemStack.of(compound.getCompound("cooler")) != null || ItemStack.of(compound.getCompound("fuel")) != null) {
-            coolerItem = ItemStack.of(compound.getCompound("cooler"));
-            fuelItem = ItemStack.of(compound.getCompound("fuel"));
+        configuredPattern = ItemStack.parseOptional(registries, tag.getCompound("items"));
+        if (ItemStack.parseOptional(registries, tag.getCompound("cooler")) != null || ItemStack.parseOptional(registries, tag.getCompound("fuel")) != null) {
+            coolerItem = ItemStack.parseOptional(registries, tag.getCompound("cooler"));
+            fuelItem = ItemStack.parseOptional(registries, tag.getCompound("fuel"));
 
         }
         /*
@@ -154,14 +151,14 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
         uraniumTimer = compound.getInt("uraniumTimer");
         heat = compound.getInt("heat");
 */
-        total = compound.getDouble("total");
-        super.read(compound, clientPacket);
+        total = tag.getDouble("total");
+        super.read(tag, registries, clientPacket);
     }
 
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) { //Permet de stocker les item 2/2
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) { //Permet de stocker les item 2/2
         if (!clientPacket) {
-            compound.put("pattern", inventory.serializeNBT());
+            compound.put("pattern", inventory.serializeNBT(registries));
             //compound.putBoolean("powered", isPowered());
         }
         compound.put("items", configuredPattern.serializeNBT());

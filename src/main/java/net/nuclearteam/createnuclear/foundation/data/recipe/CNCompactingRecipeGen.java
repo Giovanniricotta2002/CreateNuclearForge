@@ -1,6 +1,5 @@
 package net.nuclearteam.createnuclear.foundation.data.recipe;
 
-import com.simibubi.create.api.data.recipe.BaseRecipeProvider.GeneratedRecipe;
 import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

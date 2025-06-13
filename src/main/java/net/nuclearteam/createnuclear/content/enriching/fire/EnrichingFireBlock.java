@@ -1,5 +1,6 @@
 package net.nuclearteam.createnuclear.content.enriching.fire;
 
+import com.mojang.serialization.MapCodec;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.nuclearteam.createnuclear.CNTags.CNBlockTags;
 
@@ -17,9 +19,20 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"deprecation"})
 public class EnrichingFireBlock extends BaseFireBlock {
+    public static final MapCodec<EnrichingFireBlock> CODEC = simpleCodec(EnrichingFireBlock::new);
+
 
     public EnrichingFireBlock(Properties properties, float fireDamage) {
         super(properties, fireDamage);
+    }
+
+    public EnrichingFireBlock(Properties properties) {
+        super(properties, 1f);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseFireBlock> codec() {
+        return CODEC;
     }
 
     public BlockState getStateForPlacement() {
