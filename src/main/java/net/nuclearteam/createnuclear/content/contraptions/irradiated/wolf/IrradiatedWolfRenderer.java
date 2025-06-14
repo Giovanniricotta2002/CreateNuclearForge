@@ -28,12 +28,12 @@ public class IrradiatedWolfRenderer extends MobRenderer<IrradiatedWolf, Irradiat
     public void render(IrradiatedWolf entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         if (entity.isWet()) {
             float f = entity.getWetShade(partialTicks);
-            this.model.setColor(f, f, f);
+            this.model.setColor((int) f);
         }
 
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
         if (entity.isWet()) {
-            this.model.setColor(1.0F, 1.0F, 1.0F);
+            this.model.setColor(1);
         }
 
     }

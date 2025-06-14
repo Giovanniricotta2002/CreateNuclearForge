@@ -563,10 +563,7 @@ public class CNStandardRecipeGen extends BaseRecipeProvider {
         }
     }
 
-    @Override
-    public String getName() {
-        return "CreateNuclear's Standard Recipes";
-    }
+
 
     public CNStandardRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, CreateNuclear.MOD_ID);

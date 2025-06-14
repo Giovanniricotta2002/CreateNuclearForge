@@ -1,11 +1,14 @@
 package net.nuclearteam.createnuclear.content.multiblock.bluePrintItem;
 
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.nuclearteam.createnuclear.CNDataComponents;
 import net.nuclearteam.createnuclear.CNPackets;
 import net.nuclearteam.createnuclear.foundation.gui.CNGuiTextures;
 
@@ -52,7 +55,7 @@ public class ReactorBluePrintItemScreen extends AbstractSimiContainerScreen<Reac
 
         float coef = 0.1F;
 
-        CompoundTag tag = menu.contentHolder.getOrCreateTag();
+        CompoundTag tag = menu.contentHolder.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
 
         sendValueUpdate(tag, coef,
                 tag.getInt("graphiteTime"),
@@ -66,7 +69,6 @@ public class ReactorBluePrintItemScreen extends AbstractSimiContainerScreen<Reac
 
 
     private static void sendValueUpdate(CompoundTag tag, float heat, int graphiteTime, int uraniumTime, int countGraphiteRod, int countUraniumRod) {
-        CNPackets.getChannel()
-                .sendToServer(new ReactorBluePrintItemPacket2(tag, heat, graphiteTime, uraniumTime, countGraphiteRod, countGraphiteRod));
+        CatnipServices.NETWORK.sendToServer(new ReactorBluePrintItemPacket(tag, heat, graphiteTime, uraniumTime, countGraphiteRod, countGraphiteRod));
     }
 }

@@ -170,7 +170,7 @@ public class AntiRadiationArmorItem {
         public Leggings(Properties properties, DyeColor color) {
             super(
                     CNArmorMaterials.ANTI_RADIATION_SUIT,
-                    CHESTPLATE,
+                    LEGGINGS,
                     properties,
                     CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", color.getName()))
             );
@@ -236,7 +236,7 @@ public class AntiRadiationArmorItem {
         public Boot(Properties properties) {
             super(
                     CNArmorMaterials.ANTI_RADIATION_SUIT,
-                    CHESTPLATE,
+                    BOOTS,
                     properties,
                     CreateNuclear.asResource(String.format(Locale.ROOT, "%s_anti_radiation_suit", DyeColor.WHITE.getName()))
             );

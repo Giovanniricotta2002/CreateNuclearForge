@@ -1,8 +1,8 @@
 package net.nuclearteam.createnuclear.content.multiblock.bluePrintItem;
 
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -14,8 +14,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import net.nuclearteam.createnuclear.CNDataComponents;
 import net.nuclearteam.createnuclear.CNMenus;
 import net.nuclearteam.createnuclear.CNTags;
+import org.jetbrains.annotations.Nullable;
 
 import static net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintItem.getItemStorage;
 
@@ -30,12 +32,17 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     public boolean sendUpdate = false;
 
-    public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+    @Nullable
+    private final HolderLookup.Provider registryAccess;
+
+    public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
+        this.registryAccess = extraData.registryAccess();
     }
 
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
         super(type, id, inv, contentHolder);
+        this.registryAccess = null;
     }
 
 
@@ -52,27 +59,27 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     @Override
     protected void initAndReadInventory(ItemStack contentHolder) {
         super.initAndReadInventory(contentHolder);
-        CompoundTag tag = contentHolder.getOrCreateTag();
+        //CompoundTag tag = contentHolder.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
 
-        if (tag.isEmpty()) {
+        /*if (tag.isEmpty()) {
             ghostInventory.setSize(57);
             for (int i = 0; i < ghostInventory.getSlots(); i++) {
                 ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
-                tag.put("pattern", ghostInventory.serializeNBT());
+                tag.put("pattern", ghostInventory.serializeNBT(this.registryAccess));
             }
         }
 
-        contentHolder.getOrCreateTag().putInt("uraniumTime", 3600);
-        contentHolder.getOrCreateTag().putInt("graphiteTime", 5000);
-        contentHolder.getOrCreateTag().putInt("countGraphiteRod", 0);
-        contentHolder.getOrCreateTag().putInt("countUraniumRod", 0);
+        contentHolder.set(CNDataComponents.URANIUM_TIME, 3600);
+        contentHolder.set(CNDataComponents.GRAPHITE_TIME, 5000);
+        contentHolder.set(CNDataComponents.COUNT_GRAPHITE_ROD, 0);
+        contentHolder.set(CNDataComponents.COUNT_URANIUM_ROD, 0);
 
-        ghostInventory.deserializeNBT(tag.getCompound("pattern"));
+        ghostInventory.deserializeNBT(this.registryAccess, tag.getCompound("pattern"));*/
     }
 
     @Override
     protected ItemStackHandler createGhostInventory() {
-        return getItemStorage(contentHolder);
+        return new ItemStackHandler(); //getItemStorage(contentHolder);
     }
 
     @Override
@@ -119,16 +126,16 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
             if (ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag)) countUraniumRod += 1;
         }
 
-        contentHolder.getOrCreateTag().put("pattern", ghostInventory.serializeNBT());
-        contentHolder.getOrCreateTag().putInt("countGraphiteRod", countGraphiteRod);
-        contentHolder.getOrCreateTag().putInt("countUraniumRod", countUraniumRod);
+        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));
+        contentHolder.set(CNDataComponents.COUNT_GRAPHITE_ROD, countGraphiteRod);
+        contentHolder.set(CNDataComponents.COUNT_URANIUM_ROD, countUraniumRod);
 
         for (int i = 0; i < ghostInventory.getSlots(); i++) {
             if (ghostInventory.getStackInSlot(i).isEmpty() || ghostInventory.getStackInSlot(i) == null) ghostInventory.setStackInSlot(i, new ItemStack(Items.GLASS_PANE));
             if (!(ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag) || ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag))&& !ghostInventory.getStackInSlot(i).isEmpty()) ghostInventory.setStackInSlot(i, new ItemStack(Items.GLASS_PANE));
         }
 
-        contentHolder.getOrCreateTag().put("patternAll", ghostInventory.serializeNBT());
+        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));
 
     }
 

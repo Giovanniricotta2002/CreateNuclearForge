@@ -1,5 +1,7 @@
 package net.nuclearteam.createnuclear.content.contraptions.irradiated.cat;
 
+
+import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -22,15 +23,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -38,11 +40,12 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.event.EventHooks;
+import net.nuclearteam.createnuclear.CNEntityType;
+import net.nuclearteam.createnuclear.CNTags;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -53,10 +56,10 @@ public class IrradiatedCat extends TamableAnimal {
     public static final double TEMPT_SPEED_MOD = 0.6;
     public static final double WALK_SPEED_MOD = 0.8;
     public static final double SPRINT_SPEED_MOD = 1.33;
-    private static final Ingredient TEMPT_INGREDIENT;
     private static final EntityDataAccessor<Boolean> IS_LYING;
     private static final EntityDataAccessor<Boolean> RELAX_STATE_ONE;
     private static final EntityDataAccessor<Integer> DATA_COLLAR_COLOR;
+    @Nullable
     private CatAvoidEntityGoal<Player> avoidPlayersGoal;
     @Nullable
     private TemptGoal temptGoal;
@@ -69,17 +72,17 @@ public class IrradiatedCat extends TamableAnimal {
 
     public IrradiatedCat(EntityType<? extends IrradiatedCat> entityType, Level level) {
         super(entityType, level);
+        this.reassessTameGoals();
     }
 
     protected void registerGoals() {
-        this.temptGoal = new CatTemptGoal(this, 0.6, TEMPT_INGREDIENT, true);
+        this.temptGoal = new CatTemptGoal(this, 0.6, (p_335255_) -> p_335255_.is(CNTags.CNItemTags.FUEL.tag), true);
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.5));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new CatRelaxOnOwnerGoal(this));
         this.goalSelector.addGoal(4, this.temptGoal);
         this.goalSelector.addGoal(5, new CatLieOnBedGoal(this, 1.1, 8));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, (double)1.0F, 10.0F, 5.0F));
         this.goalSelector.addGoal(7, new CatSitOnBlockGoal(this, 0.8));
         this.goalSelector.addGoal(8, new LeapAtTargetGoal(this, 0.3F));
         this.goalSelector.addGoal(9, new OcelotAttackGoal(this));
@@ -87,7 +90,7 @@ public class IrradiatedCat extends TamableAnimal {
         this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 0.8, 1.0000001E-5F));
         this.goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Rabbit.class, false, (Predicate)null));
-        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
+        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
     }
 
     public void setLying(boolean lying) {
@@ -95,53 +98,40 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     public boolean isLying() {
-        return this.entityData.get(IS_LYING);
+        return (Boolean)this.entityData.get(IS_LYING);
     }
 
-    public void setRelaxStateOne(boolean relaxStateOne) {
+    void setRelaxStateOne(boolean relaxStateOne) {
         this.entityData.set(RELAX_STATE_ONE, relaxStateOne);
     }
 
-    public boolean isRelaxStateOne() {
-        return this.entityData.get(RELAX_STATE_ONE);
+    boolean isRelaxStateOne() {
+        return (Boolean)this.entityData.get(RELAX_STATE_ONE);
     }
 
-    public DyeColor getCollarColor() {
-        return DyeColor.byId(this.entityData.get(DATA_COLLAR_COLOR));
-    }
 
-    public void setCollarColor(DyeColor color) {
-        this.entityData.set(DATA_COLLAR_COLOR, color.getId());
-    }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_LYING, false);
-        this.entityData.define(RELAX_STATE_ONE, false);
-        this.entityData.define(DATA_COLLAR_COLOR, DyeColor.RED.getId());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_LYING, false);
+        builder.define(RELAX_STATE_ONE, false);
     }
 
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
     }
 
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-
-        if (compound.contains("CollarColor", 99)) {
-            this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
-        }
-
     }
 
     public void customServerAiStep() {
         if (this.getMoveControl().hasWanted()) {
-            double d = this.getMoveControl().getSpeedModifier();
-            if (d == 0.6) {
+            double d0 = this.getMoveControl().getSpeedModifier();
+            if (d0 == 0.6) {
                 this.setPose(Pose.CROUCHING);
                 this.setSprinting(false);
-            } else if (d == 1.33) {
+            } else if (d0 == 1.33) {
                 this.setPose(Pose.STANDING);
                 this.setSprinting(true);
             } else {
@@ -173,7 +163,7 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     public void hiss() {
-        this.playSound(SoundEvents.CAT_HISS, this.getSoundVolume(), this.getVoicePitch());
+        this.makeSound(SoundEvents.CAT_HISS);
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSource) {
@@ -185,7 +175,10 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0).add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.ATTACK_DAMAGE, 3.0);
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, (double)10.0F)
+                .add(Attributes.MOVEMENT_SPEED, (double)0.3F)
+                .add(Attributes.ATTACK_DAMAGE, (double)3.0F);
     }
 
     protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
@@ -194,14 +187,6 @@ public class IrradiatedCat extends TamableAnimal {
         }
 
         super.usePlayerItem(player, hand, stack);
-    }
-
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-    }
-
-    public boolean doHurtTarget(Entity target) {
-        return target.hurt(this.damageSources().mobAttack(this), this.getAttackDamage());
     }
 
     public void tick() {
@@ -258,124 +243,93 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        Cat cat = EntityType.CAT.create(level);
-        if (cat != null && otherParent instanceof Cat cat2) {
-
-            if (this.isTame()) {
-                cat.setOwnerUUID(this.getOwnerUUID());
-                cat.setTame(true);
-                if (this.random.nextBoolean()) {
-                    cat.setCollarColor(this.getCollarColor());
-                } else {
-                    cat.setCollarColor(cat2.getCollarColor());
-                }
-            }
-        }
-
-        return cat;
+    public IrradiatedCat getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+       return CNEntityType.IRRADIATED_CAT.create(level);
     }
 
     public boolean canMate(Animal otherAnimal) {
         if (!this.isTame()) {
             return false;
-        } else if (!(otherAnimal instanceof Cat)) {
-            return false;
         } else {
-            Cat cat = (Cat)otherAnimal;
-            return cat.isTame() && super.canMate(otherAnimal);
+            boolean var10000;
+            if (otherAnimal instanceof IrradiatedCat) {
+                IrradiatedCat cat = (IrradiatedCat) otherAnimal;
+                var10000 = cat.isTame() && super.canMate(otherAnimal);
+            } else {
+                var10000 = false;
+            }
+
+            return var10000;
         }
     }
 
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
-        spawnData = super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag);
-        boolean bl = level.getMoonBrightness() > 0.9F;
-        ServerLevel serverLevel = level.getLevel();
-        if (serverLevel.structureManager().getStructureWithPieceAt(this.blockPosition(), StructureTags.CATS_SPAWN_AS_BLACK).isValid()) {
-            this.setPersistenceRequired();
-        }
+    @Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+        boolean flag = level.getMoonBrightness() > 0.9F;
+        ServerLevel serverlevel = level.getLevel();
 
-        return spawnData;
+
+        return spawnGroupData;
     }
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        Item item = itemStack.getItem();
-        if (this.level().isClientSide) {
-            if (this.isTame() && this.isOwnedBy(player)) {
-                return InteractionResult.SUCCESS;
-            } else {
-                return !this.isFood(itemStack) || !(this.getHealth() < this.getMaxHealth()) && this.isTame() ? InteractionResult.PASS : InteractionResult.SUCCESS;
-            }
-        } else {
-            InteractionResult interactionResult;
-            if (this.isTame()) {
-                if (this.isOwnedBy(player)) {
-                    if (!(item instanceof DyeItem)) {
-                        if (item.isEdible() && this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
-                            this.usePlayerItem(player, hand, itemStack);
-                            this.heal((float)item.getFoodProperties().getNutrition());
-                            return InteractionResult.CONSUME;
-                        }
-
-                        interactionResult = super.mobInteract(player, hand);
-                        if (!interactionResult.consumesAction() || this.isBaby()) {
-                            this.setOrderedToSit(!this.isOrderedToSit());
-                        }
-
-                        return interactionResult;
+        ItemStack itemstack = player.getItemInHand(hand);
+        Item item = itemstack.getItem();
+        if (this.isTame()) {
+            if (this.isOwnedBy(player)) {
+                if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+                    if (!this.level().isClientSide()) {
+                        FoodProperties foodproperties = itemstack.getFoodProperties(this);
+                        this.heal(foodproperties != null ? (float)foodproperties.nutrition() : 1.0F);
+                        this.usePlayerItem(player, hand, itemstack);
                     }
 
-                    DyeColor dyeColor = ((DyeItem)item).getDyeColor();
-                    if (dyeColor != this.getCollarColor()) {
-                        this.setCollarColor(dyeColor);
-                        if (!player.getAbilities().instabuild) {
-                            itemStack.shrink(1);
-                        }
-
-                        this.setPersistenceRequired();
-                        return InteractionResult.CONSUME;
-                    }
-                }
-            } else if (this.isFood(itemStack)) {
-                this.usePlayerItem(player, hand, itemStack);
-                if (this.random.nextInt(3) == 0) {
-                    this.tame(player);
-                    this.setOrderedToSit(true);
-                    this.level().broadcastEntityEvent(this, (byte)7);
-                } else {
-                    this.level().broadcastEntityEvent(this, (byte)6);
+                    return InteractionResult.sidedSuccess(this.level().isClientSide());
                 }
 
-                this.setPersistenceRequired();
-                return InteractionResult.CONSUME;
+                InteractionResult interactionresult = super.mobInteract(player, hand);
+                if (!interactionresult.consumesAction()) {
+                    this.setOrderedToSit(!this.isOrderedToSit());
+                    return InteractionResult.sidedSuccess(this.level().isClientSide());
+                }
+
+                return interactionresult;
             }
-
-            interactionResult = super.mobInteract(player, hand);
-            if (interactionResult.consumesAction()) {
+        } else if (this.isFood(itemstack)) {
+            if (!this.level().isClientSide()) {
+                this.usePlayerItem(player, hand, itemstack);
+                this.tryToTame(player);
                 this.setPersistenceRequired();
             }
 
-            return interactionResult;
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
+
+        InteractionResult interactionresult1 = super.mobInteract(player, hand);
+        if (interactionresult1.consumesAction()) {
+            this.setPersistenceRequired();
+        }
+
+        return interactionresult1;
     }
 
     public boolean isFood(ItemStack stack) {
-        return TEMPT_INGREDIENT.test(stack);
-    }
-
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.5F;
+        return stack.is(CNTags.CNItemTags.FUEL.tag);
     }
 
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return !this.isTame() && this.tickCount > 2400;
     }
 
+    public void setTame(boolean tame, boolean applyTamingSideEffects) {
+        super.setTame(tame, applyTamingSideEffects);
+        this.reassessTameGoals();
+    }
+
     protected void reassessTameGoals() {
         if (this.avoidPlayersGoal == null) {
-            this.avoidPlayersGoal = new CatAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8, 1.33);
+            this.avoidPlayersGoal = new CatAvoidEntityGoal<Player>(this, Player.class, 16.0F, 0.8, 1.33);
         }
 
         this.goalSelector.removeGoal(this.avoidPlayersGoal);
@@ -385,17 +339,43 @@ public class IrradiatedCat extends TamableAnimal {
 
     }
 
+    private void tryToTame(Player player) {
+        if (this.random.nextInt(3) == 0 && !EventHooks.onAnimalTame(this, player)) {
+            this.tame(player);
+            this.setOrderedToSit(true);
+            this.level().broadcastEntityEvent(this, (byte)7);
+        } else {
+            this.level().broadcastEntityEvent(this, (byte)6);
+        }
+
+    }
+
     public boolean isSteppingCarefully() {
         return this.isCrouching() || super.isSteppingCarefully();
     }
 
     static {
-        TEMPT_INGREDIENT = Ingredient.of(new ItemLike[]{Items.COD, Items.SALMON});
         IS_LYING = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.BOOLEAN);
         RELAX_STATE_ONE = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.BOOLEAN);
         DATA_COLLAR_COLOR = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.INT);
     }
 
+    static class CatAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+        private final IrradiatedCat cat;
+
+        public CatAvoidEntityGoal(IrradiatedCat cat, Class<T> entityClassToAvoid, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
+            super(cat, entityClassToAvoid, maxDist, walkSpeedModifier, sprintSpeedModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
+            this.cat = cat;
+        }
+
+        public boolean canUse() {
+            return !this.cat.isTame() && super.canUse();
+        }
+
+        public boolean canContinueToUse() {
+            return !this.cat.isTame() && super.canContinueToUse();
+        }
+    }
 
     static class CatRelaxOnOwnerGoal extends Goal {
         private final IrradiatedCat cat;
@@ -415,23 +395,19 @@ public class IrradiatedCat extends TamableAnimal {
             } else if (this.cat.isOrderedToSit()) {
                 return false;
             } else {
-                LivingEntity livingEntity = this.cat.getOwner();
-                if (livingEntity instanceof Player) {
-                    this.ownerPlayer = (Player)livingEntity;
-                    if (!livingEntity.isSleeping()) {
+                LivingEntity livingentity = this.cat.getOwner();
+                if (livingentity instanceof Player) {
+                    this.ownerPlayer = (Player)livingentity;
+                    if (!livingentity.isSleeping()) {
                         return false;
                     }
 
-                    if (this.cat.distanceToSqr(this.ownerPlayer) > 100.0) {
+                    if (this.cat.distanceToSqr(this.ownerPlayer) > (double)100.0F) {
                         return false;
                     }
 
-                    BlockPos blockPos = this.ownerPlayer.blockPosition();
-                    BlockState blockState = this.cat.level().getBlockState(blockPos);
-                    if (blockState.is(BlockTags.BEDS)) {
-                        this.goalPos = blockState.getOptionalValue(BedBlock.FACING).map((direction) -> blockPos.relative(direction.getOpposite())).orElseGet(() -> new BlockPos(blockPos));
-                        return !this.spaceIsOccupied();
-                    }
+                    BlockPos blockpos = this.ownerPlayer.blockPosition();
+                    BlockState blockstate = this.cat.level().getBlockState(blockpos);
                 }
 
                 return false;
@@ -439,22 +415,13 @@ public class IrradiatedCat extends TamableAnimal {
         }
 
         private boolean spaceIsOccupied() {
-            assert this.goalPos != null;
-            List<IrradiatedCat> list = this.cat.level().getEntitiesOfClass(IrradiatedCat.class, (new AABB(this.goalPos)).inflate(2.0));
-            Iterator<IrradiatedCat> var2 = list.iterator();
+            for(IrradiatedCat cat : this.cat.level().getEntitiesOfClass(IrradiatedCat.class, (new AABB(this.goalPos)).inflate((double)2.0F))) {
+                if (cat != this.cat && (cat.isLying() || cat.isRelaxStateOne())) {
+                    return true;
+                }
+            }
 
-            IrradiatedCat cat;
-            do {
-                do {
-                    if (!var2.hasNext()) {
-                        return false;
-                    }
-
-                    cat = var2.next();
-                } while(cat == this.cat);
-            } while(!cat.isLying() && !cat.isRelaxStateOne());
-
-            return true;
+            return false;
         }
 
         public boolean canContinueToUse() {
@@ -464,7 +431,7 @@ public class IrradiatedCat extends TamableAnimal {
         public void start() {
             if (this.goalPos != null) {
                 this.cat.setInSittingPose(false);
-                this.cat.getNavigation().moveTo(this.goalPos.getX(), this.goalPos.getY(), this.goalPos.getZ(), 1.100000023841858);
+                this.cat.getNavigation().moveTo((double)this.goalPos.getX(), (double)this.goalPos.getY(), (double)this.goalPos.getZ(), (double)1.1F);
             }
 
         }
@@ -482,17 +449,18 @@ public class IrradiatedCat extends TamableAnimal {
         }
 
         private void giveMorningGift() {
-            RandomSource randomSource = this.cat.getRandom();
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-            mutableBlockPos.set(this.cat.isLeashed() ? this.cat.getLeashHolder().blockPosition() : this.cat.blockPosition());
-            this.cat.randomTeleport(mutableBlockPos.getX() + randomSource.nextInt(11) - 5, mutableBlockPos.getY() + randomSource.nextInt(5) - 2, (double)(mutableBlockPos.getZ() + randomSource.nextInt(11) - 5), false);
-            mutableBlockPos.set(this.cat.blockPosition());
-            LootTable lootTable = this.cat.level().getServer().getLootData().getLootTable(BuiltInLootTables.CAT_MORNING_GIFT);
-            LootParams lootParams = (new LootParams.Builder((ServerLevel)this.cat.level())).withParameter(LootContextParams.ORIGIN, this.cat.position()).withParameter(LootContextParams.THIS_ENTITY, this.cat).create(LootContextParamSets.GIFT);
-            List<ItemStack> list = lootTable.getRandomItems(lootParams);
+            RandomSource randomsource = this.cat.getRandom();
+            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+            blockpos$mutableblockpos.set(this.cat.isLeashed() ? this.cat.getLeashHolder().blockPosition() : this.cat.blockPosition());
+            this.cat.randomTeleport((double)(blockpos$mutableblockpos.getX() + randomsource.nextInt(11) - 5), (double)(blockpos$mutableblockpos.getY() + randomsource.nextInt(5) - 2), (double)(blockpos$mutableblockpos.getZ() + randomsource.nextInt(11) - 5), false);
+            blockpos$mutableblockpos.set(this.cat.blockPosition());
+            LootTable loottable = this.cat.level().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.CAT_MORNING_GIFT);
+            LootParams lootparams = (new LootParams.Builder((ServerLevel)this.cat.level())).withParameter(LootContextParams.ORIGIN, this.cat.position()).withParameter(LootContextParams.THIS_ENTITY, this.cat).create(LootContextParamSets.GIFT);
+            ObjectListIterator var5 = loottable.getRandomItems(lootparams).iterator();
 
-            for (ItemStack itemStack : list) {
-                this.cat.level().addFreshEntity(new ItemEntity(this.cat.level(), (double) mutableBlockPos.getX() - (double) Mth.sin(this.cat.yBodyRot * 0.017453292F), (double) mutableBlockPos.getY(), (double) mutableBlockPos.getZ() + (double) Mth.cos(this.cat.yBodyRot * 0.017453292F), itemStack));
+            while(var5.hasNext()) {
+                ItemStack itemstack = (ItemStack)var5.next();
+                this.cat.level().addFreshEntity(new ItemEntity(this.cat.level(), (double)blockpos$mutableblockpos.getX() - (double)Mth.sin(this.cat.yBodyRot * ((float)Math.PI / 180F)), (double)blockpos$mutableblockpos.getY(), (double)blockpos$mutableblockpos.getZ() + (double)Mth.cos(this.cat.yBodyRot * ((float)Math.PI / 180F)), itemstack));
             }
 
         }
@@ -500,8 +468,8 @@ public class IrradiatedCat extends TamableAnimal {
         public void tick() {
             if (this.ownerPlayer != null && this.goalPos != null) {
                 this.cat.setInSittingPose(false);
-                this.cat.getNavigation().moveTo(this.goalPos.getX(), this.goalPos.getY(), this.goalPos.getZ(), 1.100000023841858);
-                if (this.cat.distanceToSqr(this.ownerPlayer) < 2.5) {
+                this.cat.getNavigation().moveTo((double)this.goalPos.getX(), (double)this.goalPos.getY(), (double)this.goalPos.getZ(), (double)1.1F);
+                if (this.cat.distanceToSqr(this.ownerPlayer) < (double)2.5F) {
                     ++this.onBedTicks;
                     if (this.onBedTicks > this.adjustedTickDelay(16)) {
                         this.cat.setLying(true);
@@ -518,12 +486,12 @@ public class IrradiatedCat extends TamableAnimal {
         }
     }
 
-    private static class CatTemptGoal extends TemptGoal {
+    static class CatTemptGoal extends TemptGoal {
         @Nullable
         private Player selectedPlayer;
         private final IrradiatedCat cat;
 
-        public CatTemptGoal(IrradiatedCat cat, double speedModifier, Ingredient items, boolean canScare) {
+        public CatTemptGoal(IrradiatedCat cat, double speedModifier, Predicate<ItemStack> items, boolean canScare) {
             super(cat, speedModifier, items, canScare);
             this.cat = cat;
         }
@@ -544,25 +512,6 @@ public class IrradiatedCat extends TamableAnimal {
 
         public boolean canUse() {
             return super.canUse() && !this.cat.isTame();
-        }
-    }
-
-    static class CatAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
-        private final IrradiatedCat cat;
-
-        public CatAvoidEntityGoal(IrradiatedCat cat, Class<T> entityClassToAvoid, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
-            super(cat, entityClassToAvoid, maxDist, walkSpeedModifier, sprintSpeedModifier);
-            Predicate<Entity> var10006 = EntitySelector.NO_CREATIVE_OR_SPECTATOR;
-            Objects.requireNonNull(var10006);
-            this.cat = cat;
-        }
-
-        public boolean canUse() {
-            return !this.cat.isTame() && super.canUse();
-        }
-
-        public boolean canContinueToUse() {
-            return !this.cat.isTame() && super.canContinueToUse();
         }
     }
 }

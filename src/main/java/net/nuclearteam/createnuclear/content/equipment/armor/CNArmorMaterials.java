@@ -1,7 +1,5 @@
 package net.nuclearteam.createnuclear.content.equipment.armor;
 
-import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
@@ -25,7 +23,7 @@ public class CNArmorMaterials {
 
     public static final Holder<ArmorMaterial>  ANTI_RADIATION_SUIT = register(
             "anti_radiation_suit",
-            new int[]{1, 4, 5, 2},
+            new int[]{2, 4, 3, 1, 4 },
             12,
             SoundEvents.ARMOR_EQUIP_NETHERITE,
             0.0f,
@@ -48,7 +46,7 @@ public class CNArmorMaterials {
 
     private static Holder<ArmorMaterial> register(String name, int[] defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness,
                                                   float knockbackResistance,
-                                                  Supplier<Ingredient> repairIngridient,
+                                                  Supplier<Ingredient> repairIngredient,
                                                   List<ArmorMaterial.Layer> layers) {
         EnumMap<ArmorItem.Type, Integer> enumMap = new EnumMap<>(ArmorItem.Type.class);
         for (ArmorItem.Type armorItem : ArmorItem.Type.values()) {
@@ -56,7 +54,7 @@ public class CNArmorMaterials {
         }
 
         return ARMOR_MATERIALS.register(name,
-                () -> new ArmorMaterial(enumMap, enchantmentValue, equipSound, repairIngridient, layers, toughness, knockbackResistance)
+                () -> new ArmorMaterial(enumMap, enchantmentValue, equipSound, repairIngredient, layers, toughness, knockbackResistance)
         );
     }
 

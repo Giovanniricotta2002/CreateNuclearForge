@@ -81,18 +81,18 @@ public class IrradiatedChickenModel<T extends IrradiatedChicken> extends Ageable
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        beak.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        redThing.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        rightLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        leftLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        rightWing.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        leftWing.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        pustule1.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        pustule2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        pustule3.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+        head.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        beak.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        redThing.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        rightLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        leftLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        rightWing.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        leftWing.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        pustule1.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        pustule2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        pustule3.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
     }
 
     protected Iterable<ModelPart> headParts() {

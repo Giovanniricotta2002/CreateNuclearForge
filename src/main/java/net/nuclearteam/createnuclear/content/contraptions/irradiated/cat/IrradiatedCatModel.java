@@ -84,21 +84,21 @@ public class IrradiatedCatModel<T extends IrradiatedCat> extends AgeableListMode
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        leftFrontLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        rightFrontLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        leftHindLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        rightHindLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        tail1.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        tail2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+        head.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        body.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        leftFrontLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        rightFrontLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        leftHindLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        rightHindLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        tail1.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        tail2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
 
-        pustule.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        pustule3.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        pustule2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        teeth2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        teeth.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+        pustule.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        pustule3.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        pustule2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        teeth2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        teeth.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
     }
 
     public static LayerDefinition createBodyLayer() {

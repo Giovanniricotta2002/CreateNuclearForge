@@ -53,7 +53,7 @@ public class CNFluids {
 
     public static void register() {}
 
-    public static void handleFluidEffect(LivingEvent event) {
+    public static void handleFluidEffect(LivingEvent.LivingVisibilityEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.isAlive() && !(entity.isSpectator())) {
             if (entity.tickCount % 20 == 0) return;

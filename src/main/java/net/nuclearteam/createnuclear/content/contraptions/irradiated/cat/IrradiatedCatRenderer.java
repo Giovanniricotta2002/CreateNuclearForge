@@ -34,18 +34,19 @@ public class IrradiatedCatRenderer extends MobRenderer<IrradiatedCat, Irradiated
         matrixStack.scale(0.8F, 0.8F, 0.8F);
     }
 
-    protected void setupRotations(IrradiatedCat entityLiving, PoseStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.setupRotations(entityLiving, matrixStack, ageInTicks, rotationYaw, partialTicks);
-        float f = entityLiving.getLieDownAmount(partialTicks);
+    protected void setupRotations(IrradiatedCat entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+
+        float f = entity.getLieDownAmount(partialTick);
         if (f > 0.0F) {
-            matrixStack.translate(0.4F * f, 0.15F * f, 0.1F * f);
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(f, 0.0F, 90.0F)));
-            BlockPos blockPos = entityLiving.blockPosition();
-            List<Player> list = entityLiving.level().getEntitiesOfClass(Player.class, (new AABB(blockPos)).inflate(2.0, 2.0, 2.0));
+            poseStack.translate(0.4F * f, 0.15F * f, 0.1F * f);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(f, 0.0F, 90.0F)));
+            BlockPos blockPos = entity.blockPosition();
+            List<Player> list = entity.level().getEntitiesOfClass(Player.class, (new AABB(blockPos)).inflate(2.0, 2.0, 2.0));
 
             for (Player player : list) {
                 if (player.isSleeping()) {
-                    matrixStack.translate(0.15F * f, 0.0F, 0.0F);
+                    poseStack.translate(0.15F * f, 0.0F, 0.0F);
                     break;
                 }
             }

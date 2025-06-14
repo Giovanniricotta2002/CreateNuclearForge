@@ -53,6 +53,10 @@ import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public class CNBlocks {
 
+    static {
+        CreateNuclear.REGISTRATE.setCreativeTab(CNCreativeModeTabs.MAIN);
+    }
+
     public static final BlockEntry<ReactorCasing> REACTOR_CASING =
         CreateNuclear.REGISTRATE.block("reactor_casing", properties -> new ReactorCasing(properties, ReactorCasing.TypeBlock.CASING))
             .properties(p -> p.explosionResistance(3F)

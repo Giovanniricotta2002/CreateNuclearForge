@@ -441,10 +441,7 @@ public class CNShapelessRecipeGen extends BaseRecipeProvider {
         }
     }
 
-    @Override
-    public String getName() {
-        return "CreateNuclear's Shapeless Recipes";
-    }
+
 
     public CNShapelessRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, CreateNuclear.MOD_ID);

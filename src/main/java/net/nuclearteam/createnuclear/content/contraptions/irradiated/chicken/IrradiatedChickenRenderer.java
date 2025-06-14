@@ -32,16 +32,4 @@ public class IrradiatedChickenRenderer extends MobRenderer<IrradiatedChicken, Ir
         float g = Mth.lerp(partialTicks, livingBase.oFlapSpeed, livingBase.flapSpeed);
         return (Mth.sin(f) + 1.0F) * g;
     }
-
-    @Override
-    public void render(IrradiatedChicken entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-        if (entity.isBaby()) {
-            matrixStack.scale(0.5F, 0.5F, 0.5F);
-        }
-        else {
-            matrixStack.scale(1F, 1F, 1F);
-        }
-
-        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
-    }
 }

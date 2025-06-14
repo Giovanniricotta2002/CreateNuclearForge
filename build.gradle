@@ -131,7 +131,7 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     // autres dépendances Minecraft
-    //implementation "curse.maven:jade-324717:6106101"
+    implementation "curse.maven:jade-324717:6291517"
     //compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
     implementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }

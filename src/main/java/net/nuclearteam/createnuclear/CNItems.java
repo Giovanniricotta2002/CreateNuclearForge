@@ -28,6 +28,9 @@ import java.util.function.Supplier;
 
 @SuppressWarnings({"unused", "deprecation"})
 public class CNItems {
+    static {
+        CreateNuclear.REGISTRATE.setCreativeTab(CNCreativeModeTabs.MAIN);
+    }
 
     public static final ItemEntry<Item>
         YELLOWCAKE = CreateNuclear.REGISTRATE

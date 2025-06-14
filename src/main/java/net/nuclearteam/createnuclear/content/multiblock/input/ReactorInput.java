@@ -59,7 +59,7 @@ public class ReactorInput extends HorizontalDirectionalReactorBlock implements I
 
         if (level.isClientSide()) {return ItemInteractionResult.SUCCESS;}
 
-        withBlockEntityDo(level, pos, be -> NetworkHooks.openScreen((ServerPlayer) player, be, be::sendToMenu));
+        withBlockEntityDo(level, pos, be -> player.openMenu(be, be::sendToMenu));
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 

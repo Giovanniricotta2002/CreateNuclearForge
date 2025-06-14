@@ -1,0 +1,6 @@
+/give Dev createnuclear:anti_radiation_boots
+/give Dev createnuclear:black_anti_radiation_chestplate
+/give Dev createnuclear:black_anti_radiation_helmet
+/give Dev createnuclear:black_anti_radiation_leggings
+/effect give Dev createnuclear:radiation
+/effect give Dev minecraft:night_vision infinite 255

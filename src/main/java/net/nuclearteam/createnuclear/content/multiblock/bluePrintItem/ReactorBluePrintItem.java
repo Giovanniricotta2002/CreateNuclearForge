@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.nuclearteam.createnuclear.CNDamageTypes;
+import net.nuclearteam.createnuclear.CNDataComponents;
 import net.nuclearteam.createnuclear.CNItems;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,12 +56,16 @@ public class ReactorBluePrintItem extends Item implements MenuProvider {
 
         if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!world.isClientSide && player instanceof ServerPlayer)
-                NetworkHooks.openScreen((ServerPlayer) player, this, buf -> buf.writeItem(heldItem));
+                player.openMenu(this, buf -> {
+                    ItemStack.STREAM_CODEC.encode(buf, heldItem);
+                });
             return InteractionResultHolder.success(heldItem);
         }
         else if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!world.isClientSide && player instanceof ServerPlayer) {
-                NetworkHooks.openScreen((ServerPlayer) player, this, buf -> buf.writeItem(heldItem));
+                player.openMenu(this, buf -> {
+                    ItemStack.STREAM_CODEC.encode(buf, heldItem);
+                });
             }
             return InteractionResultHolder.success(heldItem);
         }
@@ -70,9 +76,9 @@ public class ReactorBluePrintItem extends Item implements MenuProvider {
         ItemStackHandler newInv = new ItemStackHandler(57);
         if (CNItems.REACTOR_BLUEPRINT.get() != stack.getItem()) throw new IllegalArgumentException("Cannot get configured items from non item: " + stack);
         if (!stack.has(AllDataComponents.FILTER_ITEMS)) return newInv;
-        CompoundTag invNBT = stack.getOrDefault(, new CompoundTag())getOrCreateTagElement("pattern");
-        if (!invNBT.isEmpty())
-            newInv.deserializeNBT(invNBT);
+        CompoundTag invNBT = stack.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
+        /*if (!invNBT.isEmpty())
+            newInv.deserializeNBT(invNBT);*/
         return newInv;
     }
 }
