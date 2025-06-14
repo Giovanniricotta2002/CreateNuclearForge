@@ -1,0 +1,23 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": true,
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "createnuclear:graphene"
+    },
+    "S": {
+      "tag": "forge:ingots/steel"
+    }
+  },
+  "pattern": [
+    "SGS",
+    "SGS",
+    "SGS",
+    "SGS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createnuclear:graphite_rod"
+  }
+}

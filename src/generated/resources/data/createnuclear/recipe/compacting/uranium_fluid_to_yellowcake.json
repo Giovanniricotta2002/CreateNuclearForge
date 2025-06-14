@@ -1,0 +1,15 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "type": "fluid_tag",
+      "amount": 100,
+      "fluid_tag": "createnuclear:uranium"
+    }
+  ],
+  "results": [
+    {
+      "id": "createnuclear:yellowcake"
+    }
+  ]
+}

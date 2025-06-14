@@ -1,0 +1,28 @@
+{
+  "parent": "createnuclear:anti_radiation_armor",
+  "criteria": {
+    "0": {
+      "trigger": "create:full_anti_radiation_armor_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.createnuclear.full_anti_radiation_armor.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "createnuclear:white_anti_radiation_chestplate"
+    },
+    "title": {
+      "translate": "advancement.createnuclear.full_anti_radiation_armor"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

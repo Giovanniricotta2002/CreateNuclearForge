@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "createnuclear:cut_autunite_slab"
+    },
+    {
+      "item": "createnuclear:cut_autunite_slab"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "createnuclear:cut_autunite"
+  }
+}

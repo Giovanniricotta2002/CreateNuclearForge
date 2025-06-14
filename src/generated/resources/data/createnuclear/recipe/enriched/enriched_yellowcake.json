@@ -1,0 +1,13 @@
+{
+  "type": "createnuclear:enriched",
+  "ingredients": [
+    {
+      "item": "createnuclear:yellowcake"
+    }
+  ],
+  "results": [
+    {
+      "id": "createnuclear:enriched_yellowcake"
+    }
+  ]
+}

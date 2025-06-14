@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/lead"
+    },
+    "Y": {
+      "item": "createnuclear:blue_cloth"
+    },
+    "Z": {
+      "item": "createnuclear:reinforced_glass"
+    }
+  },
+  "pattern": [
+    "YXY",
+    "XZX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createnuclear:blue_anti_radiation_helmet"
+  }
+}

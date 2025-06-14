@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
+    "S": {
+      "tag": "forge:ingots/lead"
+    }
+  },
+  "pattern": [
+    "SGS",
+    "GSG",
+    "SGS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createnuclear:reinforced_glass"
+  }
+}

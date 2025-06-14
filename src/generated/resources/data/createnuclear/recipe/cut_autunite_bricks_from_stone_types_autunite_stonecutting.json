@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "createnuclear:stone_types/autunite"
+  },
+  "result": {
+    "count": 1,
+    "id": "createnuclear:cut_autunite_bricks"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stone_types_autunite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#createnuclear:stone_types/autunite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "createnuclear:polished_cut_autunite_from_stone_types_autunite_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_stone_types_autunite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "createnuclear:polished_cut_autunite_from_stone_types_autunite_stonecutting"
+    ]
+  }
+}

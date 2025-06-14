@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/lead"
+    },
+    "Y": {
+      "item": "createnuclear:pink_cloth"
+    }
+  },
+  "pattern": [
+    "YXY",
+    "X X",
+    "Y Y"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createnuclear:pink_anti_radiation_leggings"
+  }
+}
