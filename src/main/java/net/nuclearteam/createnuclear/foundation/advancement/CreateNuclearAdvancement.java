@@ -50,7 +50,7 @@ public class CreateNuclearAdvancement {
         b.apply(createBuilder);
 
         if (!createBuilder.externalTrigger) {
-            builtinTrigger = AllTriggers.addSimple(id + "_builtin");
+            builtinTrigger = CNTriggers.addSimple(id + "_builtin");
             mcBuilder.addCriterion("0", builtinTrigger.createCriterion(builtinTrigger.instance()));
         }
 
@@ -102,8 +102,7 @@ public class CreateNuclearAdvancement {
                 id.equals("root") ? BACKGROUND : null, createBuilder.type.advancementType, createBuilder.type.toast,
                 createBuilder.type.announce, createBuilder.type.hide);
 
-        datagenResult = mcBuilder.save(t, Create.asResource(id)
-                .toString());
+        datagenResult = mcBuilder.save(t, CreateNuclear.asResource(id).toString());
     }
 
     void provideLang(BiConsumer<String, String> consumer) {

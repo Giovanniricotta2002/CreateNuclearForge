@@ -47,7 +47,7 @@ public class CreateNuclearDatagen {
 
         generator.addProvider(event.includeClient(), new CNStandardRecipeGen(output, lookupProvider));
         generator.addProvider(event.includeServer(), new CNMechanicalCraftingRecipeGen(output, lookupProvider));
-        generator.addProvider(event.includeServer(), new CNShapelessRecipeGen(output, lookupProvider));
+//        generator.addProvider(event.includeServer(), new CNShapelessRecipeGen(output, lookupProvider));
 
 
         generator.addProvider(event.includeClient(), new CNAdvancement(output, lookupProvider));

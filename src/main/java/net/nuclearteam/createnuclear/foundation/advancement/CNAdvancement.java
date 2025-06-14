@@ -135,13 +135,13 @@ public class CNAdvancement implements DataProvider {
     FULL_ANTI_RADIATION_ARMOR = create("full_anti_radiation_armor", b -> b.icon(CNItems.ANTI_RADIATION_CHESTPLATES.get(DyeColor.WHITE))
             .title("Fully Protected")
             .description("Wear a full set of anti-radiation armor to fully protect yourself from radiation")
-            /*.externalTrigger(
-                    InventoryChangeTrigger.TriggerInstance.hasItems(
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_HELMET_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_CHESTPLATE_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_LEGGINGS_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
-                            new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_BOOTS_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, null)
-                    ))*/
+            //.externalTrigger(
+            //        InventoryChangeTrigger.TriggerInstance.hasItems(
+            //                new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_HELMET_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+            //                new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_CHESTPLATE_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+            //                new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_LEGGINGS_FULL_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, NbtPredicate.ANY),
+            //               new ItemPredicate(CNTags.CNItemTags.ANTI_RADIATION_BOOTS_DYE.tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, null, null, null, null)
+            //        ))
             .after(ANTI_RADIATION_ARMOR)),
 
     DYE_ANTI_RADIATION_ARMOR = create("dye_anti_radiation_armor", b -> b.icon(CNItems.ANTI_RADIATION_HELMETS.get(DyeColor.RED))
@@ -248,7 +248,7 @@ public class CNAdvancement implements DataProvider {
 
     @Override
     public String getName() {
-        return "Create's Advancements";
+        return "CreateNuclear's Advancements";
     }
 
     public static void provideLang(BiConsumer<String, String> consumer) {

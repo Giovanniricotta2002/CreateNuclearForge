@@ -26,6 +26,7 @@ import net.nuclearteam.createnuclear.content.decoration.palettes.CNPaletteBlocks
 import net.nuclearteam.createnuclear.content.equipment.armor.CNArmorMaterials;
 import net.nuclearteam.createnuclear.content.kinetics.fan.processing.CNFanProcessingTypes;
 import net.nuclearteam.createnuclear.foundation.advancement.CNAdvancement;
+import net.nuclearteam.createnuclear.foundation.advancement.CNTriggers;
 import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
 import net.nuclearteam.createnuclear.infrastructure.data.CreateNuclearDatagen;
 import org.slf4j.Logger;
@@ -101,8 +102,8 @@ public class CreateNuclear {
         CNFanProcessingTypes.register();
 
         if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
-            //CNAdvancement.register();
-            // AllTrigger.register();
+            CNAdvancement.register();
+            CNTriggers.register();
         }
     }
 
