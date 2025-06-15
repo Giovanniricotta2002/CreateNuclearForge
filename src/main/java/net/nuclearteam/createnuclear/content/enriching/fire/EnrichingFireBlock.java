@@ -58,7 +58,6 @@ public class EnrichingFireBlock extends BaseFireBlock {
     }
 
     public static boolean canSurviveOnBlock(BlockState pState) {
-        CreateNuclear.LOGGER.warn("Can survive on {} : {}", pState.getBlock(), pState.is(CNBlockTags.ENRICHING_FIRE_BASE_BLOCKS.tag));
         return pState.is(CNBlockTags.ENRICHING_FIRE_BASE_BLOCKS.tag);
     }
 

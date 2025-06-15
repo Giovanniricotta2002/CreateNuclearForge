@@ -45,3 +45,4 @@ run/gametest
 run/logs
 run/schematics
 run/server
+run/downloads/log.json
