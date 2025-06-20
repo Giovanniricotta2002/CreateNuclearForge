@@ -8,6 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintData;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.UnaryOperator;
@@ -18,6 +19,11 @@ public class CNDataComponents {
     public static final DataComponentType<Float> HEAT = register(
             "heat",
             builder -> builder.persistent(ExtraCodecs.POSITIVE_FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
+
+    public static final DataComponentType<ReactorBluePrintData> REACTOR_BLUE_PRINT_DATA = register(
+            "reactor_blue_print_data",
+            builder -> builder.persistent(ReactorBluePrintData.CODEC).networkSynchronized(ReactorBluePrintData.STREAM_CODEC)
     );
 
     public static final DataComponentType<CompoundTag> PATTERN = register(

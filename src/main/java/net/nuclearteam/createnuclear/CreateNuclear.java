@@ -2,6 +2,7 @@ package net.nuclearteam.createnuclear;
 
 
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.CreateBuildInfo;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -76,6 +77,7 @@ public class CreateNuclear {
         CNPaletteBlocks.register();
 
         CNArmorMaterials.register(modEventBus);
+        CNDataComponents.register(modEventBus);
 
         CNConfigs.register(modLoadingContext, modContainer);
 

@@ -14,10 +14,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import net.nuclearteam.createnuclear.CNDataComponents;
-import net.nuclearteam.createnuclear.CNMenus;
-import net.nuclearteam.createnuclear.CNTags;
+import net.nuclearteam.createnuclear.*;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintItem.getItemStorage;
 
@@ -32,17 +34,12 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     public boolean sendUpdate = false;
 
-    @Nullable
-    private final HolderLookup.Provider registryAccess;
-
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
-        this.registryAccess = extraData.registryAccess();
     }
 
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
         super(type, id, inv, contentHolder);
-        this.registryAccess = null;
     }
 
 
@@ -59,6 +56,9 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     @Override
     protected void initAndReadInventory(ItemStack contentHolder) {
         super.initAndReadInventory(contentHolder);
+        CreateNuclear.LOGGER.warn("contentHolder: {}", contentHolder.getOrDefault(CNDataComponents.REACTOR_BLUE_PRINT_DATA, new CompoundTag()));
+
+
         //CompoundTag tag = contentHolder.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
 
         /*if (tag.isEmpty()) {
@@ -79,7 +79,7 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     @Override
     protected ItemStackHandler createGhostInventory() {
-        return new ItemStackHandler(); //getItemStorage(contentHolder);
+        return new ItemStackHandler(57); //getItemStorage(contentHolder);
     }
 
     @Override
@@ -119,7 +119,9 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     @Override
     protected void saveData(ItemStack contentHolder) {
-        for (int i = 0; i < ghostInventory.getSlots(); i++) {
+        CreateNuclear.LOGGER.warn("contentHolder: {}, ghostInventory: {}", contentHolder, ghostInventory.getStackInSlot(1));
+        contentHolder.set(CNDataComponents.REACTOR_BLUE_PRINT_DATA, new ReactorBluePrintData(0,0,0,0, List.of(new PatternData(0, CNItems.GRAPHITE_ROD.asStack())).toArray(new PatternData[0]), List.of(new PatternData(0, CNItems.GRAPHITE_ROD.asStack())).toArray(new PatternData[0])));
+        /*for (int i = 0; i < ghostInventory.getSlots(); i++) {
             if (ghostInventory.getStackInSlot(i).isEmpty() || ghostInventory.getStackInSlot(i) == null) ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
             if (!(ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag) || ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag))&& !ghostInventory.getStackInSlot(i).isEmpty()) ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
             if (ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag)) countGraphiteRod += 1;
@@ -135,7 +137,7 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
             if (!(ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag) || ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag))&& !ghostInventory.getStackInSlot(i).isEmpty()) ghostInventory.setStackInSlot(i, new ItemStack(Items.GLASS_PANE));
         }
 
-        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));
+        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));*/
 
     }
 
