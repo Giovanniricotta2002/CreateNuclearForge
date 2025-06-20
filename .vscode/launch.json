@@ -12,11 +12,11 @@
       "projectName": "CreateNuclearForge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\clientRunProgramArgs.txt"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\bin\\main"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -34,11 +34,11 @@
       "projectName": "CreateNuclearForge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\dataRunProgramArgs.txt"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\bin\\main"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -56,11 +56,11 @@
       "projectName": "CreateNuclearForge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\bin\\main"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -78,11 +78,11 @@
       "projectName": "CreateNuclearForge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\serverRunProgramArgs.txt"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\Jean Paul\\Desktop\\mod_fabric\\CreateNuclearForge\\bin\\main"
+        "@C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatenuclear%%C:\\Users\\giova\\bureau\\mod-fabric\\CreateNuclearForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run\\server",
       "env": {},

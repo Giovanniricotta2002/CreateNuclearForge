@@ -1,6 +1,7 @@
 package net.nuclearteam.createnuclear.content.multiblock.bluePrintItem;
 
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -75,10 +76,10 @@ public class ReactorBluePrintItem extends Item implements MenuProvider {
     public static ItemStackHandler getItemStorage(ItemStack stack) {
         ItemStackHandler newInv = new ItemStackHandler(57);
         if (CNItems.REACTOR_BLUEPRINT.get() != stack.getItem()) throw new IllegalArgumentException("Cannot get configured items from non item: " + stack);
-        if (!stack.has(AllDataComponents.FILTER_ITEMS)) return newInv;
-        CompoundTag invNBT = stack.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
-        /*if (!invNBT.isEmpty())
-            newInv.deserializeNBT(invNBT);*/
+        if (!stack.has(CNDataComponents.PATTERN)) return newInv;
+        //ItemHelper.fillItemStackHandler(stack.get(CNDataComponents.PATTERN), newInv);
+        //ItemHelper.fillItemStackHandler(stack.get(AllDataComponents.FILTER_ITEMS), newInv);
+
         return newInv;
     }
 }

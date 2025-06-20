@@ -35,4 +35,16 @@ public record PatternData(int slot, ItemStack stack) {
     public static ItemStack getDefaultStack() {
         return DEFAULT_STACK;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PatternData(int slot1, ItemStack stack1))) return false;
+        return slot == slot1 && ItemStack.isSameItem(this.stack, stack1);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * Integer.hashCode(slot) + (stack == null ? 0 : stack.getItem().hashCode());
+    }
 }

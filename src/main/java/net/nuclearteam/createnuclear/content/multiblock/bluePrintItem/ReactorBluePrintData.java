@@ -7,7 +7,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public record ReactorBluePrintData(int countGraphiteRod, int countUraniumRod, int graphiteTime, int uraniumTime, PatternData[] pattern, PatternData[] patternAll) {
     private static final Codec<PatternData[]> PATTERN_ARRAY_CODEC = PatternData.CODEC.listOf().xmap(
@@ -37,4 +39,25 @@ public record ReactorBluePrintData(int countGraphiteRod, int countUraniumRod, in
             STREAM_PATTERN_ARRAY_CODEC, ReactorBluePrintData::patternAll,
             ReactorBluePrintData::new
     );
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReactorBluePrintData that)) return false;
+
+        return countGraphiteRod == that.countGraphiteRod
+                && countUraniumRod == that.countUraniumRod
+                && graphiteTime == that.graphiteTime
+                && uraniumTime == that.uraniumTime
+                && Arrays.equals(pattern, that.pattern)
+                && Arrays.equals(patternAll, that.patternAll);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(countGraphiteRod, countUraniumRod, graphiteTime, uraniumTime);
+        result = 31 * result + Arrays.hashCode(pattern);
+        result = 31 * result + Arrays.hashCode(patternAll);
+        return result;
+    }
 }

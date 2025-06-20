@@ -220,7 +220,9 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
 
             if (blockEntity instanceof ReactorInputEntity be) {
                 CompoundTag tag = be.getPersistentData();
+                if (tag.isEmpty()) return;
                 ListTag inventoryTag = tag.getCompound("Inventory").getList("Items", Tag.TAG_COMPOUND);
+                if (inventoryTag.isEmpty()) return;
                 fuelItem = ItemStack.parse(this.registries, inventoryTag.getCompound(0)).get();
                 coolerItem = ItemStack.parse(this.registries, inventoryTag.getCompound(1)).get();
                 if (fuelItem.getCount() > 0 && coolerItem.getCount() > 0) {

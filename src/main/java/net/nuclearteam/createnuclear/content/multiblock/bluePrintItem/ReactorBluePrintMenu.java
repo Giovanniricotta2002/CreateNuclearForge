@@ -1,7 +1,6 @@
 package net.nuclearteam.createnuclear.content.multiblock.bluePrintItem;
 
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,13 +14,12 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.nuclearteam.createnuclear.*;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.Nullable;
+import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintItem.getItemStorage;
+import java.util.stream.Collectors;
 
 public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
@@ -34,6 +32,8 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     public boolean sendUpdate = false;
 
+    private ReactorBluePrintData reactorBluePrintData;
+
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
     }
@@ -41,8 +41,6 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     public ReactorBluePrintMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
         super(type, id, inv, contentHolder);
     }
-
-
 
     public static ReactorBluePrintMenu create(int id, Inventory inv, ItemStack stack) {
         return new ReactorBluePrintMenu(CNMenus.REACTOR_BLUEPRINT_MENU.get(), id, inv, stack);
@@ -56,25 +54,32 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
     @Override
     protected void initAndReadInventory(ItemStack contentHolder) {
         super.initAndReadInventory(contentHolder);
-        CreateNuclear.LOGGER.warn("contentHolder: {}", contentHolder.getOrDefault(CNDataComponents.REACTOR_BLUE_PRINT_DATA, new CompoundTag()));
 
+        int[][] positions = {
+                {3, 0}, {4, 0}, {5, 0},
+                {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1},
+                {1, 2}, {2, 2}, {3, 2}, {4, 2}, {5, 2}, {6, 2}, {7, 2},
+                {0, 3}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3},
+                {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4},
+                {0, 5}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {5, 5}, {6, 5}, {7, 5}, {8, 5},
+                {1, 6}, {2, 6}, {3, 6}, {4, 6}, {5, 6}, {6, 6}, {7, 6},
+                {2, 7}, {3, 7}, {4, 7}, {5, 7}, {6, 7},
+                {3, 8}, {4, 8}, {5, 8}
+        };
 
-        //CompoundTag tag = contentHolder.getOrDefault(CNDataComponents.PATTERN, new CompoundTag());
+        PatternData[] patternData = new PatternData[positions.length];
+        ItemStack defaultStack = new ItemStack(Items.GLASS_PANE);
 
-        /*if (tag.isEmpty()) {
-            ghostInventory.setSize(57);
-            for (int i = 0; i < ghostInventory.getSlots(); i++) {
-                ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
-                tag.put("pattern", ghostInventory.serializeNBT(this.registryAccess));
-            }
+        for (int i = 0; i < positions.length; i++) {
+            patternData[i] = new PatternData(i, defaultStack);
         }
 
-        contentHolder.set(CNDataComponents.URANIUM_TIME, 3600);
-        contentHolder.set(CNDataComponents.GRAPHITE_TIME, 5000);
-        contentHolder.set(CNDataComponents.COUNT_GRAPHITE_ROD, 0);
-        contentHolder.set(CNDataComponents.COUNT_URANIUM_ROD, 0);
 
-        ghostInventory.deserializeNBT(this.registryAccess, tag.getCompound("pattern"));*/
+        ReactorBluePrintData defaultPattern = new ReactorBluePrintData(0, 0, CNConfigs.common().rods.graphiteRodLifetime.get(), CNConfigs.common().rods.uraniumRodLifetime.get(), patternData, patternData);
+        CreateNuclear.LOGGER.warn("get: {}",contentHolder.get(CNDataComponents.REACTOR_BLUE_PRINT_DATA));
+        reactorBluePrintData = contentHolder.getOrDefault(CNDataComponents.REACTOR_BLUE_PRINT_DATA, defaultPattern);
+
+        CreateNuclear.LOGGER.warn("contentHolder: {}, pattern|patternAll: {}", reactorBluePrintData, Arrays.stream(reactorBluePrintData.pattern()).toArray());
     }
 
     @Override
@@ -119,25 +124,48 @@ public class ReactorBluePrintMenu extends GhostItemMenu<ItemStack> {
 
     @Override
     protected void saveData(ItemStack contentHolder) {
-        CreateNuclear.LOGGER.warn("contentHolder: {}, ghostInventory: {}", contentHolder, ghostInventory.getStackInSlot(1));
-        contentHolder.set(CNDataComponents.REACTOR_BLUE_PRINT_DATA, new ReactorBluePrintData(0,0,0,0, List.of(new PatternData(0, CNItems.GRAPHITE_ROD.asStack())).toArray(new PatternData[0]), List.of(new PatternData(0, CNItems.GRAPHITE_ROD.asStack())).toArray(new PatternData[0])));
-        /*for (int i = 0; i < ghostInventory.getSlots(); i++) {
-            if (ghostInventory.getStackInSlot(i).isEmpty() || ghostInventory.getStackInSlot(i) == null) ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
-            if (!(ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag) || ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag))&& !ghostInventory.getStackInSlot(i).isEmpty()) ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
-            if (ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag)) countGraphiteRod += 1;
-            if (ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag)) countUraniumRod += 1;
+        int[][] positions = {
+                {3, 0}, {4, 0}, {5, 0},
+                {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1},
+                {1, 2}, {2, 2}, {3, 2}, {4, 2}, {5, 2}, {6, 2}, {7, 2},
+                {0, 3}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3},
+                {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4},
+                {0, 5}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {5, 5}, {6, 5}, {7, 5}, {8, 5},
+                {1, 6}, {2, 6}, {3, 6}, {4, 6}, {5, 6}, {6, 6}, {7, 6},
+                {2, 7}, {3, 7}, {4, 7}, {5, 7}, {6, 7},
+                {3, 8}, {4, 8}, {5, 8}
+        };
+
+        PatternData[] patternData = new PatternData[positions.length];
+
+        for (int i = 0; i < positions.length; i++) {
+            ItemStack stack = ghostInventory.getStackInSlot(i);
+
+            // Vérifie que l'item est non vide et la quantité valide
+            if (!stack.isEmpty() && stack.getCount() >= 1 && stack.getCount() <= 99) {
+                patternData[i] = new PatternData(i, stack);
+            } else {
+                // Si le stack est vide ou invalide, utilise une valeur par défaut sûre
+                patternData[i] = new PatternData(i, new ItemStack(Items.GLASS_PANE)); // ou null si tu préfères filtrer
+            }
         }
 
-        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));
-        contentHolder.set(CNDataComponents.COUNT_GRAPHITE_ROD, countGraphiteRod);
-        contentHolder.set(CNDataComponents.COUNT_URANIUM_ROD, countUraniumRod);
+        // ✅ Affichage propre
+        CreateNuclear.LOGGER.warn("PatternData slots:\n{}",
+                Arrays.stream(patternData)
+                        .map(pd -> "Slot " + pd.slot() + " => " + pd.stack())
+                        .collect(Collectors.joining("\n"))
+        );
 
-        for (int i = 0; i < ghostInventory.getSlots(); i++) {
-            if (ghostInventory.getStackInSlot(i).isEmpty() || ghostInventory.getStackInSlot(i) == null) ghostInventory.setStackInSlot(i, new ItemStack(Items.GLASS_PANE));
-            if (!(ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.FUEL.tag) || ghostInventory.getStackInSlot(i).is(CNTags.CNItemTags.COOLER.tag))&& !ghostInventory.getStackInSlot(i).isEmpty()) ghostInventory.setStackInSlot(i, new ItemStack(Items.GLASS_PANE));
+        // ✅ Construction correcte de ReactorBluePrintData (vérifie les bons arguments)
+        ReactorBluePrintData reactorBluePrintData = new ReactorBluePrintData(0, 0, 0, 0, patternData, patternData);
+        contentHolder.set(CNDataComponents.REACTOR_BLUE_PRINT_DATA, reactorBluePrintData);
+
+        ReactorBluePrintData newData = new ReactorBluePrintData(0, 0, 0, 0, patternData, patternData);
+
+        if (!newData.equals(reactorBluePrintData)) {
+            contentHolder.set(CNDataComponents.REACTOR_BLUE_PRINT_DATA, newData);
         }
-
-        contentHolder.set(CNDataComponents.PATTERN, ghostInventory.serializeNBT(this.registryAccess));*/
 
     }
 
