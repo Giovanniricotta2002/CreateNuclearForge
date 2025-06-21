@@ -5,3 +5,4 @@
 /effect give Dev createnuclear:radiation
 /effect give Dev minecraft:night_vision infinite 255
 /setblock -357 -47 -536 createnuclear:enriching_fire
+/give Dev minecraft:debug_stick

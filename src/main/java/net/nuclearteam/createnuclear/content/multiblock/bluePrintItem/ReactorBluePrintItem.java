@@ -24,6 +24,8 @@ import net.nuclearteam.createnuclear.CNItems;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -74,12 +76,23 @@ public class ReactorBluePrintItem extends Item implements MenuProvider {
     }
 
     public static ItemStackHandler getItemStorage(ItemStack stack) {
-        ItemStackHandler newInv = new ItemStackHandler(57);
-        if (CNItems.REACTOR_BLUEPRINT.get() != stack.getItem()) throw new IllegalArgumentException("Cannot get configured items from non item: " + stack);
-        if (!stack.has(CNDataComponents.PATTERN)) return newInv;
-        //ItemHelper.fillItemStackHandler(stack.get(CNDataComponents.PATTERN), newInv);
-        //ItemHelper.fillItemStackHandler(stack.get(AllDataComponents.FILTER_ITEMS), newInv);
+        final int slotCount = 57;
+        ItemStackHandler inventory = new ItemStackHandler(slotCount);
 
-        return newInv;
+        if (stack.getItem() != CNItems.REACTOR_BLUEPRINT.get()) {
+            throw new IllegalArgumentException("Cannot get configured items from non-blueprint item: " + stack);
+        }
+
+        ReactorBluePrintData data = stack.get(CNDataComponents.REACTOR_BLUE_PRINT_DATA);
+        if (data == null || data.pattern().length != slotCount) {
+            return inventory;
+        }
+
+        PatternData[] pattern = data.pattern();
+        for (int i = 0; i < slotCount; i++) {
+            inventory.setStackInSlot(i, pattern[i].stack());
+        }
+
+        return inventory;
     }
 }

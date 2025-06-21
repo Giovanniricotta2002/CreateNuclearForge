@@ -68,14 +68,13 @@ public class ReactorControllerBlock extends HorizontalDirectionalReactorBlock im
         if (!(blockEntity instanceof ReactorControllerBlockEntity controllerBlockEntity)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         ItemStack heldItem = player.getItemInHand(hand);
-        CreateNuclear.LOGGER.warn("helm: {}", heldItem.get(CNDataComponents.PATTERN));
+        CreateNuclear.LOGGER.warn("helm: {}", heldItem.get(CNDataComponents.REACTOR_BLUE_PRINT_DATA));
 
         if (!state.getValue(ASSEMBLED)) {
             player.sendSystemMessage(Component.translatable("reactor.info.assembled.none").withStyle(ChatFormatting.RED));
         }
         else {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            /*if (heldItem.is(CNItems.REACTOR_BLUEPRINT.get()) && controllerBlockEntity.inventory.getItem(0).isEmpty()){
+            if (heldItem.is(CNItems.REACTOR_BLUEPRINT.get()) && controllerBlockEntity.inventory.getItem(0).isEmpty()){
                 withBlockEntityDo(level, pos, be -> {
                     be.inventory.setStackInSlot(0, heldItem);
                     be.configuredPattern = heldItem;
@@ -100,7 +99,7 @@ public class ReactorControllerBlock extends HorizontalDirectionalReactorBlock im
             }
             else if (!heldItem.isEmpty() && !controllerBlockEntity.inventory.getItem(0).isEmpty()) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            }*/
+            }
         }
         return ItemInteractionResult.SUCCESS;
     }
