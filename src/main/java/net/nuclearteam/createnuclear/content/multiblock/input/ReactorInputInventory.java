@@ -23,8 +23,8 @@ public class ReactorInputInventory extends ItemStackHandler {
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         return switch (slot) {
-            case 0 -> CNItems.URANIUM_ROD.get() == stack.getItem();
-            case 1 -> CNItems.GRAPHITE_ROD.get() == stack.getItem();
+            case 0 -> CNItems.URANIUM_ROD.isIn(stack);
+            case 1 -> CNItems.GRAPHITE_ROD.isIn(stack);
             default -> !super.isItemValid(slot, stack);
         };
     }

@@ -68,7 +68,6 @@ public class ReactorControllerBlock extends HorizontalDirectionalReactorBlock im
         if (!(blockEntity instanceof ReactorControllerBlockEntity controllerBlockEntity)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         ItemStack heldItem = player.getItemInHand(hand);
-        CreateNuclear.LOGGER.warn("helm: {}", heldItem.get(CNDataComponents.REACTOR_BLUE_PRINT_DATA));
 
         if (!state.getValue(ASSEMBLED)) {
             player.sendSystemMessage(Component.translatable("reactor.info.assembled.none").withStyle(ChatFormatting.RED));

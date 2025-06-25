@@ -46,12 +46,11 @@ public class ReactorInputMenu extends MenuBase<ReactorInputEntity> {
     @Override
     protected ReactorInputEntity createOnClient(RegistryFriendlyByteBuf extraData) {
         ClientLevel world = Minecraft.getInstance().level;
-        CompoundTag readNbt = extraData.readNbt();
+        BlockEntity blockEntity = world.getBlockEntity(extraData.readBlockPos());
 
-        BlockEntity entity = world.getBlockEntity(extraData.readBlockPos());
-        if (entity instanceof ReactorInputEntity reactorInputEntity) {
-            reactorInputEntity.readClient(readNbt, extraData.registryAccess());
-            return reactorInputEntity;
+        if (blockEntity instanceof ReactorInputEntity reactorInput) {
+            reactorInput.readClient(extraData.readNbt(), extraData.registryAccess());
+            return reactorInput;
         }
         return null;
     }

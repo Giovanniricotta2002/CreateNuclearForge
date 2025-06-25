@@ -2,10 +2,8 @@ package net.nuclearteam.createnuclear.content.multiblock.input;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.utility.ResetableLazy;
 import lib.multiblock.SimpleMultiBlockAislePatternBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -16,28 +14,33 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.nuclearteam.createnuclear.CNBlockEntityTypes;
 import net.nuclearteam.createnuclear.CNBlocks;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import static net.nuclearteam.createnuclear.content.multiblock.CNMultiblock.*;
 
 public class ReactorInputEntity extends SmartBlockEntity implements MenuProvider {
     protected BlockPos block;
-    //protected ReactorControllerBlockEntity controller;
 
     public ReactorInputInventory inventory;
-    ResetableLazy<IItemHandler> inventoryProvider;
 
 
     public ReactorInputEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         inventory = new ReactorInputInventory(this);
-        inventoryProvider = ResetableLazy.of(() -> inventory);
+    }
 
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                CNBlockEntityTypes.REACTOR_INPUT.get(),
+                (be, context) -> be.inventory
+        );
     }
 
     @Override
@@ -101,6 +104,7 @@ public class ReactorInputEntity extends SmartBlockEntity implements MenuProvider
     public void tick() {
         super.tick();
     }
+
 
     /*protected boolean isItemHandlerCap(Capability<?> cap) {
         return cap == ForgeCapabilities.ITEM_HANDLER;
