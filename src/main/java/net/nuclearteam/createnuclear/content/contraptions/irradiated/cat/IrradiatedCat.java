@@ -1,9 +1,7 @@
 package net.nuclearteam.createnuclear.content.contraptions.irradiated.cat;
 
 
-import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -11,9 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,41 +22,30 @@ import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.Turtle;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.EventHooks;
 import net.nuclearteam.createnuclear.CNEntityType;
 import net.nuclearteam.createnuclear.CNTags;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-@SuppressWarnings({"unused", "deprecation"})
+@SuppressWarnings({"unused"})
 public class IrradiatedCat extends TamableAnimal {
     public static final double TEMPT_SPEED_MOD = 0.6;
     public static final double WALK_SPEED_MOD = 0.8;
     public static final double SPRINT_SPEED_MOD = 1.33;
     private static final EntityDataAccessor<Boolean> IS_LYING;
     private static final EntityDataAccessor<Boolean> RELAX_STATE_ONE;
-    private static final EntityDataAccessor<Integer> DATA_COLLAR_COLOR;
     @Nullable
-    private CatAvoidEntityGoal<Player> avoidPlayersGoal;
+    private IrradiatedCatAvoidEntityGoal<Player> avoidPlayersGoal;
     @Nullable
     private TemptGoal temptGoal;
     private float lieDownAmount;
@@ -76,21 +61,21 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     protected void registerGoals() {
-        this.temptGoal = new CatTemptGoal(this, 0.6, (p_335255_) -> p_335255_.is(CNTags.CNItemTags.FUEL.tag), true);
+        this.temptGoal = new IrradiatedCatTemptGoal(this, 0.6, (p_335255_) -> p_335255_.is(CNTags.CNItemTags.FUEL.tag), true);
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new CatRelaxOnOwnerGoal(this));
+        this.goalSelector.addGoal(3, new IrradiatedCatRelaxOnOwnerGoal(this));
         this.goalSelector.addGoal(4, this.temptGoal);
-        this.goalSelector.addGoal(5, new CatLieOnBedGoal(this, 1.1, 8));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, (double)1.0F, 10.0F, 5.0F));
-        this.goalSelector.addGoal(7, new CatSitOnBlockGoal(this, 0.8));
+        this.goalSelector.addGoal(5, new IrradiatedCatLieOnBedGoal(this, 1.1, 8));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0F, 10.0F, 5.0F));
+        this.goalSelector.addGoal(7, new IrradiatedCatSitOnBlockGoal(this, 0.8));
         this.goalSelector.addGoal(8, new LeapAtTargetGoal(this, 0.3F));
         this.goalSelector.addGoal(9, new OcelotAttackGoal(this));
         this.goalSelector.addGoal(10, new BreedGoal(this, 0.8));
         this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 0.8, 1.0000001E-5F));
         this.goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 10.0F));
-        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Rabbit.class, false, (Predicate)null));
-        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
+        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Rabbit.class, false, null));
+        this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
     }
 
     public void setLying(boolean lying) {
@@ -98,7 +83,7 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     public boolean isLying() {
-        return (Boolean)this.entityData.get(IS_LYING);
+        return this.entityData.get(IS_LYING);
     }
 
     void setRelaxStateOne(boolean relaxStateOne) {
@@ -106,7 +91,7 @@ public class IrradiatedCat extends TamableAnimal {
     }
 
     boolean isRelaxStateOne() {
-        return (Boolean)this.entityData.get(RELAX_STATE_ONE);
+        return this.entityData.get(RELAX_STATE_ONE);
     }
 
 
@@ -176,9 +161,9 @@ public class IrradiatedCat extends TamableAnimal {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, (double)10.0F)
-                .add(Attributes.MOVEMENT_SPEED, (double)0.3F)
-                .add(Attributes.ATTACK_DAMAGE, (double)3.0F);
+                .add(Attributes.MAX_HEALTH, 10.0F)
+                .add(Attributes.MOVEMENT_SPEED, 0.3F)
+                .add(Attributes.ATTACK_DAMAGE, 3.0F);
     }
 
     protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
@@ -252,9 +237,8 @@ public class IrradiatedCat extends TamableAnimal {
             return false;
         } else {
             boolean var10000;
-            if (otherAnimal instanceof IrradiatedCat) {
-                IrradiatedCat cat = (IrradiatedCat) otherAnimal;
-                var10000 = cat.isTame() && super.canMate(otherAnimal);
+            if (otherAnimal instanceof IrradiatedCat irradiatedCat) {
+                var10000 = irradiatedCat.isTame() && super.canMate(otherAnimal);
             } else {
                 var10000 = false;
             }
@@ -263,7 +247,6 @@ public class IrradiatedCat extends TamableAnimal {
         }
     }
 
-    @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
         spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         boolean flag = level.getMoonBrightness() > 0.9F;
@@ -329,7 +312,7 @@ public class IrradiatedCat extends TamableAnimal {
 
     protected void reassessTameGoals() {
         if (this.avoidPlayersGoal == null) {
-            this.avoidPlayersGoal = new CatAvoidEntityGoal<Player>(this, Player.class, 16.0F, 0.8, 1.33);
+            this.avoidPlayersGoal = new IrradiatedCatAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8, 1.33);
         }
 
         this.goalSelector.removeGoal(this.avoidPlayersGoal);
@@ -357,161 +340,5 @@ public class IrradiatedCat extends TamableAnimal {
     static {
         IS_LYING = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.BOOLEAN);
         RELAX_STATE_ONE = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.BOOLEAN);
-        DATA_COLLAR_COLOR = SynchedEntityData.defineId(IrradiatedCat.class, EntityDataSerializers.INT);
-    }
-
-    static class CatAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
-        private final IrradiatedCat cat;
-
-        public CatAvoidEntityGoal(IrradiatedCat cat, Class<T> entityClassToAvoid, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
-            super(cat, entityClassToAvoid, maxDist, walkSpeedModifier, sprintSpeedModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
-            this.cat = cat;
-        }
-
-        public boolean canUse() {
-            return !this.cat.isTame() && super.canUse();
-        }
-
-        public boolean canContinueToUse() {
-            return !this.cat.isTame() && super.canContinueToUse();
-        }
-    }
-
-    static class CatRelaxOnOwnerGoal extends Goal {
-        private final IrradiatedCat cat;
-        @Nullable
-        private Player ownerPlayer;
-        @Nullable
-        private BlockPos goalPos;
-        private int onBedTicks;
-
-        public CatRelaxOnOwnerGoal(IrradiatedCat cat) {
-            this.cat = cat;
-        }
-
-        public boolean canUse() {
-            if (!this.cat.isTame()) {
-                return false;
-            } else if (this.cat.isOrderedToSit()) {
-                return false;
-            } else {
-                LivingEntity livingentity = this.cat.getOwner();
-                if (livingentity instanceof Player) {
-                    this.ownerPlayer = (Player)livingentity;
-                    if (!livingentity.isSleeping()) {
-                        return false;
-                    }
-
-                    if (this.cat.distanceToSqr(this.ownerPlayer) > (double)100.0F) {
-                        return false;
-                    }
-
-                    BlockPos blockpos = this.ownerPlayer.blockPosition();
-                    BlockState blockstate = this.cat.level().getBlockState(blockpos);
-                }
-
-                return false;
-            }
-        }
-
-        private boolean spaceIsOccupied() {
-            for(IrradiatedCat cat : this.cat.level().getEntitiesOfClass(IrradiatedCat.class, (new AABB(this.goalPos)).inflate((double)2.0F))) {
-                if (cat != this.cat && (cat.isLying() || cat.isRelaxStateOne())) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public boolean canContinueToUse() {
-            return this.cat.isTame() && !this.cat.isOrderedToSit() && this.ownerPlayer != null && this.ownerPlayer.isSleeping() && this.goalPos != null && !this.spaceIsOccupied();
-        }
-
-        public void start() {
-            if (this.goalPos != null) {
-                this.cat.setInSittingPose(false);
-                this.cat.getNavigation().moveTo((double)this.goalPos.getX(), (double)this.goalPos.getY(), (double)this.goalPos.getZ(), (double)1.1F);
-            }
-
-        }
-
-        public void stop() {
-            this.cat.setLying(false);
-            float f = this.cat.level().getTimeOfDay(1.0F);
-            if (this.ownerPlayer.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double)this.cat.level().getRandom().nextFloat() < 0.7) {
-                this.giveMorningGift();
-            }
-
-            this.onBedTicks = 0;
-            this.cat.setRelaxStateOne(false);
-            this.cat.getNavigation().stop();
-        }
-
-        private void giveMorningGift() {
-            RandomSource randomsource = this.cat.getRandom();
-            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-            blockpos$mutableblockpos.set(this.cat.isLeashed() ? this.cat.getLeashHolder().blockPosition() : this.cat.blockPosition());
-            this.cat.randomTeleport((double)(blockpos$mutableblockpos.getX() + randomsource.nextInt(11) - 5), (double)(blockpos$mutableblockpos.getY() + randomsource.nextInt(5) - 2), (double)(blockpos$mutableblockpos.getZ() + randomsource.nextInt(11) - 5), false);
-            blockpos$mutableblockpos.set(this.cat.blockPosition());
-            LootTable loottable = this.cat.level().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.CAT_MORNING_GIFT);
-            LootParams lootparams = (new LootParams.Builder((ServerLevel)this.cat.level())).withParameter(LootContextParams.ORIGIN, this.cat.position()).withParameter(LootContextParams.THIS_ENTITY, this.cat).create(LootContextParamSets.GIFT);
-            ObjectListIterator var5 = loottable.getRandomItems(lootparams).iterator();
-
-            while(var5.hasNext()) {
-                ItemStack itemstack = (ItemStack)var5.next();
-                this.cat.level().addFreshEntity(new ItemEntity(this.cat.level(), (double)blockpos$mutableblockpos.getX() - (double)Mth.sin(this.cat.yBodyRot * ((float)Math.PI / 180F)), (double)blockpos$mutableblockpos.getY(), (double)blockpos$mutableblockpos.getZ() + (double)Mth.cos(this.cat.yBodyRot * ((float)Math.PI / 180F)), itemstack));
-            }
-
-        }
-
-        public void tick() {
-            if (this.ownerPlayer != null && this.goalPos != null) {
-                this.cat.setInSittingPose(false);
-                this.cat.getNavigation().moveTo((double)this.goalPos.getX(), (double)this.goalPos.getY(), (double)this.goalPos.getZ(), (double)1.1F);
-                if (this.cat.distanceToSqr(this.ownerPlayer) < (double)2.5F) {
-                    ++this.onBedTicks;
-                    if (this.onBedTicks > this.adjustedTickDelay(16)) {
-                        this.cat.setLying(true);
-                        this.cat.setRelaxStateOne(false);
-                    } else {
-                        this.cat.lookAt(this.ownerPlayer, 45.0F, 45.0F);
-                        this.cat.setRelaxStateOne(true);
-                    }
-                } else {
-                    this.cat.setLying(false);
-                }
-            }
-
-        }
-    }
-
-    static class CatTemptGoal extends TemptGoal {
-        @Nullable
-        private Player selectedPlayer;
-        private final IrradiatedCat cat;
-
-        public CatTemptGoal(IrradiatedCat cat, double speedModifier, Predicate<ItemStack> items, boolean canScare) {
-            super(cat, speedModifier, items, canScare);
-            this.cat = cat;
-        }
-
-        public void tick() {
-            super.tick();
-            if (this.selectedPlayer == null && this.mob.getRandom().nextInt(this.adjustedTickDelay(600)) == 0) {
-                this.selectedPlayer = this.player;
-            } else if (this.mob.getRandom().nextInt(this.adjustedTickDelay(500)) == 0) {
-                this.selectedPlayer = null;
-            }
-
-        }
-
-        protected boolean canScare() {
-            return this.selectedPlayer != null && this.selectedPlayer.equals(this.player) ? false : super.canScare();
-        }
-
-        public boolean canUse() {
-            return super.canUse() && !this.cat.isTame();
-        }
     }
 }

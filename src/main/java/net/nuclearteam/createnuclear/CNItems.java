@@ -16,9 +16,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.nuclearteam.createnuclear.content.equipment.armor.AntiRadiationArmorItem;
+import net.nuclearteam.createnuclear.content.equipment.armor.CNArmorMaterials;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem;
 import net.nuclearteam.createnuclear.content.equipment.cloth.ClothItem.DyeItemList;
 import net.nuclearteam.createnuclear.content.multiblock.bluePrintItem.ReactorBluePrintItem;
@@ -112,6 +114,7 @@ public class CNItems {
                 CNItemTags.ALL_ANTI_RADIATION_ARMORS.tag,
                 CNItemTags.ANTI_RADIATION_HELMET_FULL_DYE.tag
             )
+            .properties(p -> p.durability(CNArmorMaterials.durabilityForType(ArmorItem.Type.HELMET)))
             .lang(TextUtils.titleCaseConversion(color.getName()) +" Anti Radiation Helmet")
             .model((c, p) -> p.generated(c, CreateNuclear.asResource("item/armors/helmets/" + colorName + "_anti_radiation_helmet")))
             .register();
@@ -129,6 +132,7 @@ public class CNItems {
                 CNItemTags.ALL_ANTI_RADIATION_ARMORS.tag,
                 CNItemTags.ANTI_RADIATION_CHESTPLATE_FULL_DYE.tag
             )
+            .properties(p -> p.durability(CNArmorMaterials.durabilityForType(ArmorItem.Type.CHESTPLATE)))
             .lang(TextUtils.titleCaseConversion(color.getName()) +" Anti Radiation Chestplate")
             .model((c, p) -> p.generated(c, CreateNuclear.asResource("item/armors/chestplates/" + colorName + "_anti_radiation_chestplate")))
             .register();
@@ -145,6 +149,7 @@ public class CNItems {
                 CNItemTags.ALL_ANTI_RADIATION_ARMORS.tag,
                 CNItemTags.ANTI_RADIATION_LEGGINGS_FULL_DYE.tag
             )
+            .properties(p -> p.durability(CNArmorMaterials.durabilityForType(ArmorItem.Type.LEGGINGS)))
             .lang(TextUtils.titleCaseConversion(color.getName()) +" Anti Radiation Leggings")
             .model((c, p) -> p.generated(c, CreateNuclear.asResource("item/armors/leggings/" + colorName + "_anti_radiation_leggings")))
             .register();
@@ -155,6 +160,7 @@ public class CNItems {
         ANTI_RADIATION_BOOTS = CreateNuclear.REGISTRATE.item("anti_radiation_boots", Boot::new)
             .tag(CNTags.forgeItemTag("boots"), CNTags.forgeItemTag("armors"), CNItemTags.ANTI_RADIATION_BOOTS_DYE.tag, CNItemTags.ANTI_RADIATION_ARMOR.tag, CNItemTags.ALL_ANTI_RADIATION_ARMORS.tag)
             .lang("Anti Radiation Boots")
+            .properties(p -> p.durability(CNArmorMaterials.durabilityForType(ArmorItem.Type.BOOTS)))
             .model((c, p) -> p.generated(c, CreateNuclear.asResource("item/armors/anti_radiation_boots")))
             .register();
 

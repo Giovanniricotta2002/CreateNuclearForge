@@ -11,10 +11,10 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 
-public class CatSitOnBlockGoal extends MoveToBlockGoal {
+public class IrradiatedCatSitOnBlockGoal extends MoveToBlockGoal {
     private final IrradiatedCat irradiatedCat;
 
-    public CatSitOnBlockGoal(IrradiatedCat cat, double speedModifier) {
+    public IrradiatedCatSitOnBlockGoal(IrradiatedCat cat, double speedModifier) {
         super(cat, speedModifier, 8);
         this.irradiatedCat = cat;
     }

@@ -62,4 +62,10 @@ public class CNArmorMaterials {
     public static void register(IEventBus eventBus) {
         ARMOR_MATERIALS.register(eventBus);
     }
+
+    public static int durabilityForType(ArmorItem.Type type) {
+        int[] BASE_DURABILITY = {11, 16, 15, 13};
+        int durabilityMultiplier = 15;
+        return BASE_DURABILITY[type.ordinal()] * durabilityMultiplier;
+    }
 }

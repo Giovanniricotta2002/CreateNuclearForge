@@ -185,23 +185,6 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
         ON, OFF
     }
 
-    private void explodeReactorCore(Level level, BlockPos pos) {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                for (int z = -1; z <= 1; z++) {
-                    BlockPos currentPos = pos.offset(x, y, z);
-                    //le problème viens de la il ne rentre pas dans le if
-                    if (level.getBlockState(currentPos).is(CNBlocks.REACTOR_CORE.get())) {
-                        // Create and execute the explosion
-                        Explosion explosion = new Explosion(level, null, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 4.0F, false, Explosion.BlockInteraction.DESTROY);
-                        explosion.explode();
-                        explosion.finalizeExplosion(true);
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -229,17 +212,19 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
                         total = calculateProgress();
 
                         if (IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.SAFETY || IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.CAUTION || IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.WARNING) {
-                            this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), heat/4);
+                            this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), heat/4, true);
+                            return;
                         } else {
                             EventTriggerPacket packet = new EventTriggerPacket(600);
                             CreateNuclear.LOGGER.warn("hum EventTriggerBlock ? {}", packet);
                             CatnipServices.NETWORK.sendToClientsAround((ServerLevel) level, getBlockPos(), 32, packet);
 
-                            this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), 0);
+                            this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), 0, false);
+                            return;
                         }
-                        return;
                     } else {
-                        this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), 0);
+                        //this.rotate(getBlockState(), new BlockPos(getBlockPos().getX(), getBlockPos().getY() + FindController('O').getY(), getBlockPos().getZ()), getLevel(), 0, false);
+                        return;
                     }
                 }
                 this.notifyUpdate();
@@ -413,9 +398,9 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
                 .getDistanceController(character);
     }
 
-    public void rotate(BlockState state, BlockPos pos, Level level, int rotation) {
+    public void rotate(BlockState state, BlockPos pos, Level level, int rotation, boolean isActif) {
         rotation = rotation > 0 ? rotation : heat/4;
-        if (level.getBlockState(pos).is(CNBlocks.REACTOR_OUTPUT.get()) && rotation > 0) {
+        if (level.getBlockState(pos).is(CNBlocks.REACTOR_OUTPUT.get()) && rotation > 0 && isActif) {
             if (level.getBlockState(pos).getBlock() instanceof ReactorOutput block) {
                 ReactorOutputEntity entity = block.getBlockEntityType().getBlockEntity(level, pos);
                 if (state.getValue(ASSEMBLED)) { // Starting the energy
@@ -440,36 +425,5 @@ public class ReactorControllerBlockEntity extends SmartBlockEntity implements II
                 entity.updateGeneratedRotation();
             }
         }
-    }
-
-    public InteractionResult onClick(Player player, InteractionHand hand) {
-        ItemStack heldItem = player.getItemInHand(hand);
-        if (heldItem.is(CNItems.REACTOR_BLUEPRINT.get()) && !heldItem.isEmpty()) {
-            if (configuredPattern.isEmpty()) {
-                inventory.setStackInSlot(0, heldItem);
-                configuredPattern = heldItem;
-                //player.setItemInHand(hand, ItemStack.EMPTY);
-            }
-            notifyUpdate();
-            return InteractionResult.SUCCESS;
-        }
-        else if (heldItem.isEmpty()) {
-            if (configuredPattern.isEmpty()) {
-                if (!level.isClientSide) {
-                    if (player.addItem(configuredPattern)){
-                        configuredPattern = ItemStack.EMPTY;
-                    }
-                    else {
-                        player.setItemInHand(hand, configuredPattern);
-                        inventory.setStackInSlot(0, ItemStack.EMPTY);
-                    }
-                    notifyUpdate();
-                    return InteractionResult.CONSUME;
-                    //return InteractionResult.FAIL;
-                }
-                else return InteractionResult.SUCCESS;
-            }
-        }
-        return InteractionResult.PASS;
     }
 }

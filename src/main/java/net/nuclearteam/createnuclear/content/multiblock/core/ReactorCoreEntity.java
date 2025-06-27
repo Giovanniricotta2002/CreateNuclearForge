@@ -7,9 +7,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.nuclearteam.createnuclear.CNBlocks;
 import net.nuclearteam.createnuclear.CNDataComponents;
+import net.nuclearteam.createnuclear.CreateNuclear;
 import net.nuclearteam.createnuclear.content.multiblock.IHeat;
 import net.nuclearteam.createnuclear.content.multiblock.casing.ReactorCasingEntity;
 import net.nuclearteam.createnuclear.content.multiblock.controller.ReactorControllerBlockEntity;
+import net.nuclearteam.createnuclear.infrastructure.config.CNConfigs;
 
 import static net.nuclearteam.createnuclear.content.multiblock.CNMultiblock.*;
 
@@ -29,9 +31,9 @@ public class ReactorCoreEntity extends ReactorCasingEntity {
 
         BlockPos controllerPos = getBlockPosForReactor();
         if (level.getBlockEntity(controllerPos) instanceof ReactorControllerBlockEntity reactorController) {
-            float heat = 12; //reactorController.configuredPattern.get(CNDataComponents.HEAT);
-            if (IHeat.HeatLevel.of((int) heat) == IHeat.HeatLevel.DANGER) {
-                if (countdownTicks >= 600) { // 300 ticks = 15 secondes
+            int heat = reactorController.heat;
+            if (IHeat.HeatLevel.of(heat) == IHeat.HeatLevel.DANGER) {
+                if (countdownTicks >= CNConfigs.common().explode.time.get()) { // 300 ticks = 15 secondes
                     explodeReactorCore(level, getBlockPos());
                 } else {
                     countdownTicks++;
