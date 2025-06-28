@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-import java.util.Collections;
-
 import static net.nuclearteam.createnuclear.CNTags.NameSpace.*;
 
 @SuppressWarnings({"unused", "deprecation"})
@@ -32,7 +30,7 @@ public class CNTags {
     }
 
     public static <T> TagKey<T> forgeTag(Registry<T> registry, String path) {
-        return optionalTag(registry, ResourceLocation.fromNamespaceAndPath(FORGE.id, path));
+        return optionalTag(registry, ResourceLocation.fromNamespaceAndPath(NEO_FORGE.id, path));
     }
 
     public static TagKey<Block> forgeBlockTag(String path) {
@@ -49,8 +47,10 @@ public class CNTags {
 
     public enum NameSpace {
         MOD(CreateNuclear.MOD_ID, false, true),
+        COMMON("c"),
         CREATE("create"),
         FORGE("forge"),
+        NEO_FORGE(COMMON.id),
         MINECRAFT("minecraft")
         ;
 

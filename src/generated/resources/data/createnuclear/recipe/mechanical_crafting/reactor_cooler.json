@@ -13,7 +13,7 @@
       "item": "minecraft:blue_ice"
     },
     "S": {
-      "tag": "forge:ingots/steel"
+      "tag": "c:ingots/steel"
     }
   },
   "pattern": [

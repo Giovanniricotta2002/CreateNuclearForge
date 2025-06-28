@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:raw_materials/lead"
+            "items": "#c:raw_materials/lead"
           }
         ]
       },

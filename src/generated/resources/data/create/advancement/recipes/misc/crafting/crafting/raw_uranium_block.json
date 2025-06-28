@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:raw_materials/uranium"
+            "items": "#c:raw_materials/uranium"
           }
         ]
       },
